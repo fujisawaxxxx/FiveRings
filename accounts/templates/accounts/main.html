@@ -3,20 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <title>メイン画面</title>
+    <script>
+        function toggleCopyOptions() {
+            // 商品プルダウンメニューで選択された値を取得
+            var selectedProduct = document.getElementById("document-type").value;
+            
+            // 複写オプションの要素を取得
+            var copyOptions = document.getElementById("copy-options");
+
+            // 「同意説明書（カラー）」か「同意説明書（モノクロ）」が選ばれた場合は表示、他の場合は非表示
+            if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
+                copyOptions.style.display = "block";  // 表示
+            } else {
+                copyOptions.style.display = "none";   // 非表示
+            }
+
+            // フォームをリセット
+            resetForm();
+        }
+
+        function resetForm() {
+            // 数量と本文の入力をリセット
+            document.getElementById("quantity").value = "";  // 数量
+            document.getElementById("content").value = "";   // 本文
+
+            // 複写オプションのプルダウンメニューをすべてリセット
+            document.getElementById("copy-option1").selectedIndex = 0;
+            document.getElementById("copy-option2").selectedIndex = 0;
+            document.getElementById("copy-option3").selectedIndex = 0;
+            document.getElementById("copy-option4").selectedIndex = 0;
+            document.getElementById("copy-option5").selectedIndex = 0;
+        }
+
+        // ページが読み込まれたときに、複写オプションの表示を初期化
+        window.onload = function() {
+            toggleCopyOptions();
+        };
+    </script>
 </head>
 <body>
     <h1>メイン画面</h1>
     <p>ログイン成功！</p>
 
-    <!-- プルダウンメニューの追加 -->
+    <!-- 商品を選択するプルダウンメニュー -->
     <label for="document-type">商品を選択してください:</label>
-    <select id="document-type" name="document_type">
+    <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
         <option value="consent-color">同意説明書（カラー）</option>
         <option value="consent-monochrome">同意説明書（モノクロ）</option>
         <option value="case-card">ケースカード（症例報告書）</option>
         <option value="protocol">治験実施計画書</option>
         <option value="medication-diary">服薬日誌</option>
     </select>
+
+    <!-- 数量と本文の入力フォーム -->
+    <h2>数量と本文</h2>
+    <label for="quantity">数量:</label>
+    <input type="number" id="quantity" name="quantity" min="1" step="1" required><br><br>
+
+    <label for="content">本文:</label>
+    <input type="number" id="content" name="content" required><br><br>
+
+    <!-- 複写オプションのプルダウンメニュー 5つ -->
+    <div id="copy-options">
+        <h2>複写オプション</h2>
+
+        <!-- 複写1 -->
+        <label for="copy-option1">複写1:</label>
+        <select id="copy-option1" name="copy_option1">
+            <option value="option1-0">複写なし</option>
+            <option value="option1-1">2枚4頁</option>
+            <option value="option1-2">3枚6頁（基本）</option>
+            <option value="option1-3">4枚8頁</option>
+            <option value="option1-4">5枚10頁</option>
+        </select><br><br>
+
+        <!-- 複写2 -->
+        <label for="copy-option2">複写2:</label>
+        <select id="copy-option2" name="copy_option2">
+            <option value="option2-0">複写なし</option>
+            <option value="option2-1">2枚4頁</option>
+            <option value="option2-2">3枚6頁</option>
+            <option value="option2-3">4枚8頁</option>
+            <option value="option2-4">5枚10頁</option>
+        </select><br><br>
+
+        <!-- 複写3 -->
+        <label for="copy-option3">複写3:</label>
+        <select id="copy-option3" name="copy_option3">
+            <option value="option3-0">複写なし</option>
+            <option value="option3-1">2枚4頁</option>
+            <option value="option3-2">3枚6頁</option>
+            <option value="option3-3">4枚8頁</option>
+            <option value="option3-4">5枚10頁</option>
+        </select><br><br>
+
+        <!-- 複写なしミシン目 -->
+        <label for="copy-option4">複写なしミシン目:</label>
+        <select id="copy-option4" name="copy_option4">
+            <option value="option4-0">なし</option>
+            <option value="option4-1">1枚2頁</option>
+            <option value="option4-2">2枚4頁</option>
+            <option value="option4-3">3枚6頁</option>
+        </select><br><br>
+
+        <!-- 複写オプション追加料金 -->
+        <label for="copy-option5">複写オプション追加料金:</label>
+        <select id="copy-option5" name="copy_option5">
+            <option value="option6-0">オプションなし</option>
+            <option value="option6-1">複写なし</option>
+            <option value="option6-2">カラー3枚複写</option>
+            <option value="option6-3">カラー2枚複写</option>
+            <option value="option6-4">両面3枚複写</option>
+            <option value="option6-4">両面2枚複写</option>
+        </select><br><br>
+    </div>
 
 </body>
 </html>

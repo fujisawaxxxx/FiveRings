@@ -41,7 +41,7 @@
         };
 
 
-
+        //見積もり計算ボタンがクリックされたとき動作        
         function calculateEstimate() {
             // 数量を取得
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
@@ -49,11 +49,18 @@
             // 商品を取得
             var selectedProduct = document.getElementById("document-type").value;
 
-            // ケースカードが選択された場合
+
+            
+            // 商品のプルダウンにてケースカードかどうか
             if (selectedProduct === "case-card") {
                 var content = document.getElementById("content").value;
 
                 // ケースカードの単価を取得するAPIを呼び出す
+                // その後の流れ：orders/urls.py⇒orders/viwes.py(get_case_card_price)⇒orders/models.py(CaseCard)
+
+                // 1.orders/urls.py: /orders/api/casecard-price/ というURLにリクエストが送られると、そのリクエストは get_case_card_price 関数にルーティングされる。
+                // 2.orders/views.py: get_case_card_price 関数がリクエストを受け取り、CaseCard モデルのデータベースから content に対応するレコードを探し、その単価 unit_price をクライアントに返す。
+                // 3.orders/models.py: CaseCard モデルがデータベースと連携し、該当する unit_price を取得して views.py に渡す。
                 fetch(`/orders/api/casecard-price/?content=${content}`)
                     .then(response => response.json())
                     .then(data => {
@@ -71,6 +78,9 @@
                         document.getElementById("estimate-result").innerText = "エラーが発生しました。";
                     });
             }
+
+
+
         }
 
     </script>

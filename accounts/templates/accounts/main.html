@@ -79,7 +79,49 @@
                     });
             }
 
+            // 治験実施計画書
+            if (selectedProduct === "chiken-plan") {
+                var content = document.getElementById("content").value;
 
+                fetch(`/orders/api/chiken-plan-price/?content=${content}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.unit_price) {
+                            var unitPrice = parseFloat(data.unit_price);
+
+                            // 見積もり金額を計算して表示
+                            var totalPrice = quantity * unitPrice;
+                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
+                        } else {
+                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
+                    });
+            }
+
+            // 服薬日誌
+            if (selectedProduct === "medication-diary") {
+                var content = document.getElementById("content").value;
+
+                fetch(`/orders/api/medication-diary-price/?content=${content}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.unit_price) {
+                            var unitPrice = parseFloat(data.unit_price);
+
+                            // 見積もり金額を計算して表示
+                            var totalPrice = quantity * unitPrice;
+                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
+                        } else {
+                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
+                    });
+            }
 
         }
 
@@ -95,7 +137,7 @@
         <option value="consent-color">同意説明書（カラー）</option>
         <option value="consent-monochrome">同意説明書（モノクロ）</option>
         <option value="case-card">ケースカード（症例報告書）</option>
-        <option value="protocol">治験実施計画書</option>
+        <option value="chiken-plan">治験実施計画書</option>
         <option value="medication-diary">服薬日誌</option>
     </select>
 

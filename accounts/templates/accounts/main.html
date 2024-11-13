@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面</title>
+    <title>メイン画面11/13-2</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -303,6 +303,29 @@
                     });
             }
 
+            // 同意説明書（カラー）
+            if (selectedProduct === "consent-color") {
+                var content = document.getElementById("content").value;
+
+                fetch(`/orders/api/agree-color/?content=${content}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.unit_price) {
+                            var unitPrice = parseFloat(data.unit_price);
+
+                            // 見積もり金額を計算して表示
+                            var totalPrice = quantity * unitPrice;
+                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
+                            document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
+                        } else {
+                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
+                            document.getElementById("estimate-tnk").innerText = "";
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
+                    });
+            }
         }
 
     </script>
@@ -387,10 +410,9 @@
         <label for="fukusha5">複写オプション追加料金:</label>
         <select id="fukusha5" name="fukusha5">
             <option value="fukusha_add_price-0">オプションなし</option>
-            <option value="fukusha_add_price-1">複写なし</option>
-            <option value="fukusha_add_price-2">カラー3枚複写</option>
-            <option value="fukusha_add_price-3">カラー2枚複写</option>
-            <option value="fukusha_add_price-4">両面3枚複写</option>
+            <option value="fukusha_add_price-1">カラー3枚複写</option>
+            <option value="fukusha_add_price-2">カラー2枚複写</option>
+            <option value="fukusha_add_price-3">両面3枚複写</option>
             <option value="fukusha_add_price-4">両面2枚複写</option>
         </select><br><br>
     </div>

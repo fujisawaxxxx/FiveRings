@@ -1,3 +1,4 @@
+# models.py
 from django.db import models
 
 class AgreementColor(models.Model):

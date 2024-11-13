@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/13-2</title>
+    <title>メイン画面11/13-3</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -216,103 +216,36 @@
         };
 
 
-        //見積もり計算ボタンがクリックされたとき動作        
+        // 見積もり計算ボタンがクリックされたとき動作
         function calculateEstimate() {
-            // 数量を取得
+            // 数量と本文頁数を取得
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
+            var content = parseFloat(document.getElementById("content").value) || 0;
 
             // 商品を取得
             var selectedProduct = document.getElementById("document-type").value;
 
-            
-            // 商品のプルダウンにてケースカードかどうか
-            if (selectedProduct === "case-card") {
-                var content = document.getElementById("content").value;
+            // 各複写オプション頁数を取得
+            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数：", "")) || 0;
 
-                // ケースカードの単価を取得するAPIを呼び出す
-                // その後の流れ：orders/urls.py⇒orders/viwes.py(get_case_card_price)⇒orders/models.py(CaseCard)
+            // 各厚紙オプション頁数を取得
+            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数：", "")) || 0;
+            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数：", "")) || 0;
 
-                // 1.orders/urls.py: /orders/api/casecard-price/ というURLにリクエストが送られると、そのリクエストは get_case_card_price 関数にルーティングされる。
-                // 2.orders/views.py: get_case_card_price 関数がリクエストを受け取り、CaseCard モデルのデータベースから content に対応するレコードを探し、その単価 unit_price をクライアントに返す。
-                // 3.orders/models.py: CaseCard モデルがデータベースと連携し、該当する unit_price を取得して views.py に渡す。
-                fetch(`/orders/api/casecard-price/?content=${content}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price);
+            // 総頁数を計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
+            var totalPages = content + fukusha1Page + fukusha2Page + fukusha3Page + fukusha4Page + atsugami2Page + atsugami3Page;
 
-                            // 見積もり金額を計算して表示
-                            var totalPrice = quantity * unitPrice;
-                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
-                            document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
-                        } else {
-                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
-                            document.getElementById("estimate-tnk").innerText = "";
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
-                    });
-            }
-
-            // 治験実施計画書
-            if (selectedProduct === "chiken-plan") {
-                var content = document.getElementById("content").value;
-
-                fetch(`/orders/api/chiken-plan-price/?content=${content}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price);
-
-                            // 見積もり金額を計算して表示
-                            var totalPrice = quantity * unitPrice;
-                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
-                            document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
-                        } else {
-                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
-                            document.getElementById("estimate-tnk").innerText = "";
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
-                    });
-            }
-
-            // 服薬日誌
-            if (selectedProduct === "medication-diary") {
-                var content = document.getElementById("content").value;
-
-                fetch(`/orders/api/medication-diary-price/?content=${content}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price);
-
-                            // 見積もり金額を計算して表示
-                            var totalPrice = quantity * unitPrice;
-                            document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
-                            document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
-                        } else {
-                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
-                            document.getElementById("estimate-tnk").innerText = "";
-                        }
-                    })
-                    .catch(error => {
-                        document.getElementById("estimate-result").innerText = "エラーが発生しました。";
-                    });
-            }
-
-            // 同意説明書（カラー）
+            // 商品が「同意説明書（カラー）」の場合に見積もり計算
             if (selectedProduct === "consent-color") {
-                var content = document.getElementById("content").value;
-
-                fetch(`/orders/api/agree-color/?content=${content}`)
+                fetch(`/orders/api/agree-color/?content=${totalPages}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.unit_price) {
                             var unitPrice = parseFloat(data.unit_price);
-
+                            
                             // 見積もり金額を計算して表示
                             var totalPrice = quantity * unitPrice;
                             document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
@@ -327,6 +260,8 @@
                     });
             }
         }
+
+
 
     </script>
 </head>

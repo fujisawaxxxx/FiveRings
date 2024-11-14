@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/13-3</title>
+    <title>メイン画面11/13-5</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -217,6 +217,8 @@
 
 
         // 見積もり計算ボタンがクリックされたとき動作
+        // 見積もり計算ボタンがクリックされたとき動作
+        // 見積もり計算ボタンがクリックされたとき動作
         function calculateEstimate() {
             // 数量と本文頁数を取得
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
@@ -225,22 +227,42 @@
             // 商品を取得
             var selectedProduct = document.getElementById("document-type").value;
 
-            // 各複写オプション頁数を取得
-            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数：", "")) || 0;
+            // 複写オプションの頁数を無視するかどうか判定
+            var isCopyOptionIgnored = (selectedProduct === "case-card" || selectedProduct === "chiken-plan" || selectedProduct === "medication-diary");
+
+            // 各複写オプション頁数と厚紙オプション頁数を取得
+            var fukusha1Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha2Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha3Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数：", "")) || 0;
+            var fukusha4Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数：", "")) || 0;
 
             // 各厚紙オプション頁数を取得
-            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数：", "")) || 0;
-            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数：", "")) || 0;
+            var atsugami2Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数：", "")) || 0;
+            var atsugami3Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数：", "")) || 0;
 
             // 総頁数を計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
             var totalPages = content + fukusha1Page + fukusha2Page + fukusha3Page + fukusha4Page + atsugami2Page + atsugami3Page;
 
-            // 商品が「同意説明書（カラー）」の場合に見積もり計算
+            // totalPagesを表示
+            document.getElementById("total-pages-result").innerText = "総頁数: " + totalPages;
+
+            // 商品別に異なるAPIエンドポイントを呼び出す
+            let apiUrl;
             if (selectedProduct === "consent-color") {
-                fetch(`/orders/api/agree-color/?content=${totalPages}`)
+                apiUrl = `/orders/api/agree-color/?content=${totalPages}`;
+            } else if (selectedProduct === "consent-monochrome") {
+                apiUrl = `/orders/api/agree-monochrome/?content=${totalPages}`;
+            } else if (selectedProduct === "case-card") {
+                apiUrl = `/orders/api/casecard-price/?content=${content}`;
+            } else if (selectedProduct === "chiken-plan") {
+                apiUrl = `/orders/api/chiken-plan-price/?content=${content}`;
+            } else if (selectedProduct === "medication-diary") {
+                apiUrl = `/orders/api/medication-diary-price/?content=${content}`;
+            }
+
+            // APIにリクエストを送信して見積もり金額を取得
+            if (apiUrl) {
+                fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
                         if (data.unit_price) {
@@ -260,6 +282,7 @@
                     });
             }
         }
+
 
 
 
@@ -285,7 +308,7 @@
     <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br>
 
     <label for="content">本文:</label>
-    <input type="number" id="content" name="content" required><label>頁</label<br><br>
+    <input type="number" id="content" name="content" required><label>頁</label<br><br><br>
 
     <!-- 複写オプションのプルダウンメニュー 5つ -->
     <div id="copy-options">
@@ -349,9 +372,10 @@
             <option value="fukusha_add_price-2">カラー2枚複写</option>
             <option value="fukusha_add_price-3">両面3枚複写</option>
             <option value="fukusha_add_price-4">両面2枚複写</option>
-        </select><br><br>
-    </div>
+        </select><br>
 
+        <p id="total-pages-result">総頁数: -</p><br>
+    </div>
     <!-- 見積もり計算ボタン -->
     <button type="button" onclick="calculateEstimate()">見積もり計算</button><br><br>
 

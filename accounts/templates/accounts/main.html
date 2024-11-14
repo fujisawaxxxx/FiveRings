@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/14-2</title>
+    <title>メイン画面11/14-4</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -214,6 +214,32 @@
             toggleCopyOptionsfukusha1();
         };
 
+        // 複写オプション追加料金の単価表示
+        function displayAdditionalCharge() {
+            var copyOptionValue = document.getElementById("fukusha5").value;
+            var additionalCharge = 0;
+
+            switch (copyOptionValue) {
+                case "fukusha_add_price-1":
+                    additionalCharge = 60;
+                    break;
+                case "fukusha_add_price-2":
+                    additionalCharge = 40;
+                    break;
+                case "fukusha_add_price-3":
+                    additionalCharge = 50;
+                    break;
+                case "fukusha_add_price-4":
+                    additionalCharge = 30;
+                    break;
+                default:
+                    additionalCharge = 0;
+            }
+
+            document.getElementById("additional-charge-label").innerText = "追加料金: " + additionalCharge + " 円";
+        }
+
+
         // 見積もり計算ボタンがクリックされたとき動作
         function calculateEstimate() {
             // 数量と本文頁数を取得
@@ -276,8 +302,8 @@
 
             // 全ての複写オプションが「複写なし」の場合は50円を単価から減算
             var isNoCopyOption = (document.getElementById("fukusha1").value === "fukusha1-0" &&
-                                  document.getElementById("fukusha2").value === "fukusha2-0" &&
-                                  document.getElementById("fukusha3").value === "fukusha3-0");
+                                document.getElementById("fukusha2").value === "fukusha2-0" &&
+                                document.getElementById("fukusha3").value === "fukusha3-0");
 
             // APIにリクエストを送信して見積もり金額を取得
             if (apiUrl) {
@@ -290,6 +316,9 @@
                             // 複写なしが選択された場合は50円引く
                             if (isNoCopyOption) {
                                 unitPrice -= 50;
+                                document.getElementById("discount-message").innerText = "すべて複写なし：50円引き";
+                            } else {
+                                document.getElementById("discount-message").innerText = "";  // メッセージをクリア
                             }
 
                             // 見積もり金額を計算して表示
@@ -299,15 +328,15 @@
                         } else {
                             document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
                             document.getElementById("estimate-tnk").innerText = "";
+                            document.getElementById("discount-message").innerText = "";
                         }
                     })
                     .catch(error => {
                         document.getElementById("estimate-result").innerText = "エラーが発生しました。";
+                        document.getElementById("discount-message").innerText = "";
                     });
             }
         }
-
-
 
     </script>
 </head>
@@ -389,13 +418,15 @@
 
         <!-- 複写オプション追加料金 -->
         <label for="fukusha5">複写オプション追加料金:</label>
-        <select id="fukusha5" name="fukusha5">
+        <select id="fukusha5" name="fukusha5" onchange="displayAdditionalCharge()">
             <option value="fukusha_add_price-0">オプションなし</option>
             <option value="fukusha_add_price-1">カラー3枚複写</option>
             <option value="fukusha_add_price-2">カラー2枚複写</option>
             <option value="fukusha_add_price-3">両面3枚複写</option>
             <option value="fukusha_add_price-4">両面2枚複写</option>
-        </select><br>
+        </select>
+        <span id="additional-charge-label">追加料金: - 円</span>
+        <br>
 
         <p id="total-pages-result">総頁数: -</p><br>
     </div>
@@ -406,7 +437,7 @@
     <p id="estimate-result">見積もり金額: - 円</p>
 
     <!-- 単価を表示するラベル -->
-    <p id="estimate-tnk">単価: - 円</p>
+    <p id="estimate-tnk">単価: - 円</p> <p id="discount-message"></p> 
 
 </body>
 </html>

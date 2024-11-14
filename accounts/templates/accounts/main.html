@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/14-1</title>
+    <title>メイン画面11/14-2</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -18,7 +18,6 @@
             } else {
                 copyOptions.style.display = "none";   // 非表示
             }
-
             // フォームをリセット
             resetForm();
         }
@@ -275,13 +274,23 @@
                     break;
             }
 
+            // 全ての複写オプションが「複写なし」の場合は50円を単価から減算
+            var isNoCopyOption = (document.getElementById("fukusha1").value === "fukusha1-0" &&
+                                  document.getElementById("fukusha2").value === "fukusha2-0" &&
+                                  document.getElementById("fukusha3").value === "fukusha3-0");
+
             // APIにリクエストを送信して見積もり金額を取得
             if (apiUrl) {
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
                         if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price) + additionalCharge; // 追加料金を加算
+                            var unitPrice = parseFloat(data.unit_price) + additionalCharge;
+
+                            // 複写なしが選択された場合は50円引く
+                            if (isNoCopyOption) {
+                                unitPrice -= 50;
+                            }
 
                             // 見積もり金額を計算して表示
                             var totalPrice = quantity * unitPrice;
@@ -331,9 +340,9 @@
         <!-- 複写1 -->
         <label for="fukusha1">複写1:</label>
         <select id="fukusha1" name="fukusha1" onchange="toggleCopyOptionsfukusha1()">
+            <option value="fukusha1-2">3枚6頁（基本）</option>
             <option value="fukusha1-0">複写なし</option>
             <option value="fukusha1-1">2枚4頁</option>
-            <option value="fukusha1-2">3枚6頁（基本）</option>
             <option value="fukusha1-3">4枚8頁</option>
             <option value="fukusha1-4">5枚10頁</option>
         </select>

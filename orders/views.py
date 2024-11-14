@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import JsonResponse
-from .models import CaseCard,Chiken,Fukuyaku,AgreementColor
+from .models import CaseCard,Chiken,Fukuyaku,AgreementColor,AgreementMonochrome
 
 # 同意説明書カラー
 def get_agree_color(request):
@@ -19,6 +19,20 @@ def get_agree_color(request):
             return JsonResponse({'error': '同意説明書カラーが見つかりません'}, status=404)
     else:
         return JsonResponse({'error': '同意説明書カラーのパラメーターが見つかりました'}, status=400)
+
+# 同意説明書モノクロ
+def get_agree_monochrome(request):
+    content = request.GET.get('content', None)
+
+    # contentが指定されている場合、そのnumber_of_sheetsに一致するケースカードを取得
+    if content is not None:
+        try:
+            agree_monochrome= AgreementMonochrome.objects.get(number_of_sheets=content)
+            return JsonResponse({'unit_price': agree_monochrome.unit_price})
+        except AgreementMonochrome.DoesNotExist:
+            return JsonResponse({'error': '同意説明書モノクロが見つかりません'}, status=404)
+    else:
+        return JsonResponse({'error': '同意説明書モノクローのパラメーターが見つかりました'}, status=400)
 
 # ケースカード
 def get_case_card_price(request):

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/13-5</title>
+    <title>メイン画面11/14-1</title>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -215,9 +215,6 @@
             toggleCopyOptionsfukusha1();
         };
 
-
-        // 見積もり計算ボタンがクリックされたとき動作
-        // 見積もり計算ボタンがクリックされたとき動作
         // 見積もり計算ボタンがクリックされたとき動作
         function calculateEstimate() {
             // 数量と本文頁数を取得
@@ -260,14 +257,32 @@
                 apiUrl = `/orders/api/medication-diary-price/?content=${content}`;
             }
 
+            // 複写オプション追加料金の取得
+            var copyOptionValue = document.getElementById("fukusha5").value;
+            var additionalCharge = 0;
+            switch (copyOptionValue) {
+                case "fukusha_add_price-1":  // カラー3枚複写
+                    additionalCharge = 60;
+                    break;
+                case "fukusha_add_price-2":  // カラー2枚複写
+                    additionalCharge = 40;
+                    break;
+                case "fukusha_add_price-3":  // 両面3枚複写
+                    additionalCharge = 50;
+                    break;
+                case "fukusha_add_price-4":  // 両面2枚複写
+                    additionalCharge = 30;
+                    break;
+            }
+
             // APIにリクエストを送信して見積もり金額を取得
             if (apiUrl) {
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
                         if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price);
-                            
+                            var unitPrice = parseFloat(data.unit_price) + additionalCharge; // 追加料金を加算
+
                             // 見積もり金額を計算して表示
                             var totalPrice = quantity * unitPrice;
                             document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
@@ -282,7 +297,6 @@
                     });
             }
         }
-
 
 
 

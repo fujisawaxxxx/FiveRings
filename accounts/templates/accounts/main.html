@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面0006</title>
+    <title>メイン画面0007</title>
     <style>
         .copy-options-table {
             width: 100%;
@@ -47,12 +47,12 @@
             document.getElementById("fukusha5").selectedIndex = 0; // 複写オプション追加料金をリセット
 
             // 複写オプションの表示を初期化
-            document.getElementById("fukusha1-label").innerText = "複写頁数: -";
-            document.getElementById("fukusha2-label").innerText = "複写頁数: -";
-            document.getElementById("fukusha3-label").innerText = "複写頁数: -";
-            document.getElementById("fukusha4-label").innerText = "複写頁数: -";
-            document.getElementById("atsugami2-label").innerText = "厚紙頁数: -";
-            document.getElementById("atsugami3-label").innerText = "厚紙頁数: -";
+            document.getElementById("fukusha1-label").innerText = "-";
+            document.getElementById("fukusha2-label").innerText = "-";
+            document.getElementById("fukusha3-label").innerText = "-";
+            document.getElementById("fukusha4-label").innerText = "-";
+            document.getElementById("atsugami2-label").innerText = "-";
+            document.getElementById("atsugami3-label").innerText = "-";
         }
 
 
@@ -63,22 +63,22 @@
 
             switch (selectedValue) {
                 case "fukusha1-0":
-                    fukusya_page.innerText = "複写頁数: 0";
+                    fukusya_page.innerText = "0";
                     break;
                 case "fukusha1-1":
-                    fukusya_page.innerText = "複写頁数: -2";
+                    fukusya_page.innerText = "-2";
                     break;
                 case "fukusha1-2":
-                    fukusya_page.innerText = "複写頁数: 0";
+                    fukusya_page.innerText = "0";
                     break;
                 case "fukusha1-3":
-                    fukusya_page.innerText = "複写頁数: 2";
+                    fukusya_page.innerText = "2";
                     break;
                 case "fukusha1-4":
-                    fukusya_page.innerText = "複写頁数: 4";
+                    fukusya_page.innerText = "4";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数: 0";
+                    fukusya_page.innerText = "0";
             }
         }
 
@@ -90,28 +90,28 @@
 
             switch (selectedValue) {
                 case "fukusha2-0":
-                    fukusya_page.innerText = "複写頁数: 0";
-                    atsugami_page.innerText = "厚紙頁数: 0";
+                    fukusya_page.innerText = "0";
+                    atsugami_page.innerText = "0";
                     break;
                 case "fukusha2-1":
-                    fukusya_page.innerText = "複写頁数: 4";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "4";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha2-2":
-                    fukusya_page.innerText = "複写頁数: 6";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "6";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha2-3":
-                    fukusya_page.innerText = "複写頁数: 8";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "8";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha2-4":
-                    fukusya_page.innerText = "複写頁数: 10";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "10";
+                    atsugami_page.innerText = "2";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数: 0";
-                    atsugami_page.innerText = "厚紙頁数: 0";
+                    fukusya_page.innerText = "0";
+                    atsugami_page.innerText = "0";
             }
         }
         // 複写3のプルダウン選択時
@@ -122,28 +122,28 @@
 
             switch (selectedValue) {
                 case "fukusha3-0":
-                    fukusya_page.innerText = "複写頁数: 0";
-                    atsugami_page.innerText = "厚紙頁数: 0";
+                    fukusya_page.innerText = "0";
+                    atsugami_page.innerText = "0";
                     break;
                 case "fukusha3-1":
-                    fukusya_page.innerText = "複写頁数: 4";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "4";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha3-2":
-                    fukusya_page.innerText = "複写頁数: 6";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "6";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha3-3":
-                    fukusya_page.innerText = "複写頁数: 8";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "8";
+                    atsugami_page.innerText = "2";
                     break;
                 case "fukusha3-4":
-                    fukusya_page.innerText = "複写頁数: 10";
-                    atsugami_page.innerText = "厚紙頁数: 2";
+                    fukusya_page.innerText = "10";
+                    atsugami_page.innerText = "2";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数: 0";
-                    atsugami_page.innerText = "厚紙頁数: 0";
+                    fukusya_page.innerText = "0";
+                    atsugami_page.innerText = "0";
             }
         }
 
@@ -179,19 +179,19 @@
 
             switch (selectedValue) {
                 case "fukusha_no-0":
-                    fukusya_page.innerText = "複写頁数: 0";
+                    fukusya_page.innerText = "0";
                     break;
                 case "fukusha_no-1":
-                    fukusya_page.innerText = "複写頁数: 2";
+                    fukusya_page.innerText = "2";
                     break;
                 case "fukusha_no-2":
-                    fukusya_page.innerText = "複写頁数: 4";
+                    fukusya_page.innerText = "4";
                     break;
                 case "fukusha_no-3":
-                    fukusya_page.innerText = "複写頁数: 6";
+                    fukusya_page.innerText = "6";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数: 0";
+                    fukusya_page.innerText = "0";
             }
         }
 
@@ -204,12 +204,12 @@
             var selectedProduct = document.getElementById("document-type").value;
 
             // 各複写オプションページ数と厚紙オプションページ数を取得
-            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数: ", "")) || 0;
-            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数: ", "")) || 0;
-            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数: ", "")) || 0;
-            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数: ", "")) || 0;
-            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数: ", "")) || 0;
-            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数: ", "")) || 0;
+            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("", "")) || 0;
+            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("", "")) || 0;
+            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("", "")) || 0;
+            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("", "")) || 0;
+            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("", "")) || 0;
+            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("", "")) || 0;
 
             // 総頁数の計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
             var totalPages = content + fukusha1Page + fukusha2Page + fukusha3Page + fukusha4Page + atsugami2Page + atsugami3Page;
@@ -335,7 +335,7 @@
                         <option value="fukusha1-4">5枚10頁</option>
                     </select>
                 </td>
-                <td><span id="fukusha1-label">複写頁数: -</span></td>
+                <td><span id="fukusha1-label">-</span></td>
                 <td></td>
             </tr>
             <tr>
@@ -349,8 +349,8 @@
                         <option value="fukusha2-4">5枚10頁</option>
                     </select>
                 </td>
-                <td><span id="fukusha2-label">複写頁数: -</span></td>
-                <td><span id="atsugami2-label">厚紙頁数: -</span></td>
+                <td><span id="fukusha2-label">-</span></td>
+                <td><span id="atsugami2-label">-</span></td>
             </tr>
             <tr>
                 <td>複写3:</td>
@@ -363,8 +363,8 @@
                         <option value="fukusha3-4">5枚10頁</option>
                     </select>
                 </td>
-                <td><span id="fukusha3-label">複写頁数: -</span></td>
-                <td><span id="atsugami3-label">厚紙頁数: -</span></td>
+                <td><span id="fukusha3-label">-</span></td>
+                <td><span id="atsugami3-label">-</span></td>
             </tr>
             <tr>
                 <td>複写なしミシン目:</td>
@@ -376,7 +376,7 @@
                         <option value="fukusha_no-3">3枚6頁</option>
                     </select>
                 </td>
-                <td><span id="fukusha4-label">複写頁数: -</span></td>
+                <td><span id="fukusha4-label">-</span></td>
                 <td></td>
             </tr>
         </table>

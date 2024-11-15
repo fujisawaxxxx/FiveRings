@@ -2,220 +2,152 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面11/14-4</title>
+    <title>メイン画面0006</title>
+    <style>
+        .copy-options-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .copy-options-table th, .copy-options-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .copy-options-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
-            // 商品プルダウンメニューで選択された値を取得
             var selectedProduct = document.getElementById("document-type").value;
-            
-            // 複写オプションの要素を取得
             var copyOptions = document.getElementById("copy-options");
 
-            // 「同意説明書（カラー）」か「同意説明書（モノクロ）」が選ばれた場合は表示、他の場合は非表示
+            // 商品選択に応じて複写オプションの表示/非表示を切り替え
             if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
-                copyOptions.style.display = "block";  // 表示
+                copyOptions.style.display = "block";
             } else {
-                copyOptions.style.display = "none";   // 非表示
+                copyOptions.style.display = "none";
             }
-            // フォームをリセット
-            resetForm();
+
+            // 以下の項目をリセット
+            document.getElementById("quantity").value = ""; // 数量をクリア
+            document.getElementById("content").value = ""; // 本文をクリア
+            document.getElementById("total-pages-result").innerText = "総頁数: -"; // 総頁数をクリア
+            document.getElementById("estimate-result").innerText = "見積もり金額: - 円"; // 見積もり金額をクリア
+            document.getElementById("estimate-tnk").innerText = "単価: - 円"; // 単価をクリア
+            document.getElementById("discount-message").innerText = ""; // 割引メッセージをクリア
+            document.getElementById("additional-charge-label").innerText = "追加料金: - 円"; // 追加料金をクリア
+
+            // 複写オプションの選択状態をリセット
+            document.getElementById("fukusha1").selectedIndex = 0; // 複写1をリセット
+            document.getElementById("fukusha2").selectedIndex = 0; // 複写2をリセット
+            document.getElementById("fukusha3").selectedIndex = 0; // 複写3をリセット
+            document.getElementById("fukusha4").selectedIndex = 0; // 複写なしミシン目をリセット
+            document.getElementById("fukusha5").selectedIndex = 0; // 複写オプション追加料金をリセット
+
+            // 複写オプションの表示を初期化
+            document.getElementById("fukusha1-label").innerText = "複写頁数: -";
+            document.getElementById("fukusha2-label").innerText = "複写頁数: -";
+            document.getElementById("fukusha3-label").innerText = "複写頁数: -";
+            document.getElementById("fukusha4-label").innerText = "複写頁数: -";
+            document.getElementById("atsugami2-label").innerText = "厚紙頁数: -";
+            document.getElementById("atsugami3-label").innerText = "厚紙頁数: -";
         }
-        //複写１のプルダウン選択時
+
+
+        // 複写1のプルダウン選択時
         function toggleCopyOptionsfukusha1() {
-            // 商品プルダウンメニューで選択された値を取得
             var selectedValue = document.getElementById("fukusha1").value;
-            var fukusya_page = document.getElementById("fukusha1-label");  // 表示ラベルの要素を取得
-            var fukusya1_count
-            // 選択された値に基づくラベル表示の分岐
+            var fukusya_page = document.getElementById("fukusha1-label");
+
             switch (selectedValue) {
                 case "fukusha1-0":
-                    // 複写なし
-                    fukusya_page.innerText = "複写頁数：0";
-                    fukusya1_count = 0;
+                    fukusya_page.innerText = "複写頁数: 0";
                     break;
                 case "fukusha1-1":
-                    // 2枚4頁
-                    fukusya_page.innerText = "複写頁数：-2";
-                    fukusya1_count = -2;
+                    fukusya_page.innerText = "複写頁数: -2";
                     break;
                 case "fukusha1-2":
-                    // 3枚6頁（基本）
-                    fukusya_page.innerText = "複写頁数：0";
-                    fukusya1_count = 0;
+                    fukusya_page.innerText = "複写頁数: 0";
                     break;
                 case "fukusha1-3":
-                    // 4枚8頁
-                    fukusya_page.innerText = "複写頁数：2";
-                    fukusya1_count = 2;
+                    fukusya_page.innerText = "複写頁数: 2";
                     break;
                 case "fukusha1-4":
-                    // 5枚10頁
-                    fukusya_page.innerText = "複写頁数：4";
-                    fukusya1_count = 4;
+                    fukusya_page.innerText = "複写頁数: 4";
                     break;
                 default:
-                    fukusya_page.innerText = "選択肢が無効です";
+                    fukusya_page.innerText = "複写頁数: 0";
             }
         }
 
-        //複写２のプルダウン選択時
+        // 複写2のプルダウン選択時
         function toggleCopyOptionsfukusha2() {
-            // 商品プルダウンメニューで選択された値を取得
             var selectedValue = document.getElementById("fukusha2").value;
-            var fukusya_page = document.getElementById("fukusha2-label");  // 表示ラベルの要素を取得
-            var atsugami_page = document.getElementById("atsugami2-label"); 
+            var fukusya_page = document.getElementById("fukusha2-label");
+            var atsugami_page = document.getElementById("atsugami2-label");
 
-            var fukusya2_count
-            var atsugami2_count
-
-            // 選択された値に基づくラベル表示の分岐
             switch (selectedValue) {
                 case "fukusha2-0":
-                    // 複写なし
-                    fukusya_page.innerText = "複写頁数：0";
-                    atsugami_page.innerText = "厚紙頁数：0";
-                    fukusya2_count = 0;
-                    atsugami2_count = 0;
+                    fukusya_page.innerText = "複写頁数: 0";
+                    atsugami_page.innerText = "厚紙頁数: 0";
                     break;
                 case "fukusha2-1":
-                    // 2枚4頁
-                    fukusya_page.innerText = "複写頁数：4";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya2_count = 4;
-                    atsugami2_count = 2;
+                    fukusya_page.innerText = "複写頁数: 4";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha2-2":
-                    // 3枚6頁（基本）
-                    fukusya_page.innerText = "複写頁数：6";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya2_count = 6;
-                    atsugami2_count = 2;
+                    fukusya_page.innerText = "複写頁数: 6";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha2-3":
-                    // 4枚8頁
-                    fukusya_page.innerText = "複写頁数：8";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya2_count = 8;
-                    atsugami2_count = 2;
+                    fukusya_page.innerText = "複写頁数: 8";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha2-4":
-                    // 5枚10頁
-                    fukusya_page.innerText = "複写頁数：10";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya2_count = 10;
-                    atsugami2_count = 2;
+                    fukusya_page.innerText = "複写頁数: 10";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数：0";
-                    atsugami_page.innerText = "厚紙頁数：0";
+                    fukusya_page.innerText = "複写頁数: 0";
+                    atsugami_page.innerText = "厚紙頁数: 0";
             }
         }
-        
-        //複写３のプルダウン選択時
+        // 複写3のプルダウン選択時
         function toggleCopyOptionsfukusha3() {
-            // 商品プルダウンメニューで選択された値を取得
             var selectedValue = document.getElementById("fukusha3").value;
-            var fukusya_page = document.getElementById("fukusha3-label");  // 表示ラベルの要素を取得
-            var atsugami_page = document.getElementById("atsugami3-label"); 
+            var fukusya_page = document.getElementById("fukusha3-label");
+            var atsugami_page = document.getElementById("atsugami3-label");
 
-            var fukusya3_count
-            var atsugami3_count
-
-            // 選択された値に基づくラベル表示の分岐
             switch (selectedValue) {
                 case "fukusha3-0":
-                    // 複写なし
-                    fukusya_page.innerText = "複写頁数：0";
-                    atsugami_page.innerText = "厚紙頁数：0";
-                    fukusya3_count = 0;
-                    atsugami3_count = 0;
+                    fukusya_page.innerText = "複写頁数: 0";
+                    atsugami_page.innerText = "厚紙頁数: 0";
                     break;
                 case "fukusha3-1":
-                    // 2枚4頁
-                    fukusya_page.innerText = "複写頁数：4";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya3_count = 4;
-                    atsugami3_count = 2;
+                    fukusya_page.innerText = "複写頁数: 4";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha3-2":
-                    // 3枚6頁（基本）
-                    fukusya_page.innerText = "複写頁数：6";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya3_count = 6;
-                    atsugami3_count = 2;
+                    fukusya_page.innerText = "複写頁数: 6";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha3-3":
-                    // 4枚8頁
-                    fukusya_page.innerText = "複写頁数：8";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya3_count = 8;
-                    atsugami3_count = 2;
+                    fukusya_page.innerText = "複写頁数: 8";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 case "fukusha3-4":
-                    // 5枚10頁
-                    fukusya_page.innerText = "複写頁数：10";
-                    atsugami_page.innerText = "厚紙頁数：2";
-                    fukusya3_count = 10;
-                    atsugami3_count = 2;
+                    fukusya_page.innerText = "複写頁数: 10";
+                    atsugami_page.innerText = "厚紙頁数: 2";
                     break;
                 default:
-                    fukusya_page.innerText = "複写頁数：0";
-                    atsugami_page.innerText = "厚紙頁数：0";
+                    fukusya_page.innerText = "複写頁数: 0";
+                    atsugami_page.innerText = "厚紙頁数: 0";
             }
         }
-        //複写なしミシン目のプルダウン選択時
-        function toggleCopyOptionsfukusha4() {
-            // 商品プルダウンメニューで選択された値を取得
-            var selectedValue = document.getElementById("fukusha4").value;
-            var fukusya_page = document.getElementById("fukusha4-label");  // 表示ラベルの要素を取得
-            var fukusha_no_count
-            // 選択された値に基づくラベル表示の分岐
-            switch (selectedValue) {
-                case "fukusha_no-0":
-                    // 複写なし
-                    fukusya_page.innerText = "複写頁数：0";
-                    fukusya1_count = 0;
-                    break;
-                case "fukusha_no-1":
-                    // 1枚2頁
-                    fukusya_page.innerText = "複写頁数：2";
-                    fukusya1_count = 2;
-                    break;
-                case "fukusha_no-2":
-                    // 2枚4頁
-                    fukusya_page.innerText = "複写頁数：4";
-                    fukusya1_count = 4;
-                    break;
-                case "fukusha_no-3":
-                    // 3枚6頁
-                    fukusya_page.innerText = "複写頁数：6";
-                    fukusya1_count = 6;
-                    break;
-                default:
-                    fukusya_page.innerText = "選択肢が無効です";
-            }
-        }
-        function resetForm() {
-            // 数量と本文の入力をリセット
-            document.getElementById("quantity").value = "";  // 数量
-            document.getElementById("content").value = "";   // 本文
 
-            // 複写オプションのプルダウンメニューをすべてリセット
-            document.getElementById("fukusha1").selectedIndex = 0;
-            document.getElementById("fukusha2").selectedIndex = 0;
-            document.getElementById("fukusha3").selectedIndex = 0;
-            document.getElementById("copy-option4").selectedIndex = 0;
-            document.getElementById("copy-option5").selectedIndex = 0;
-        }
-
-        // ページが読み込まれたときに、複写オプションの表示を初期化
-        window.onload = function() {
-            toggleCopyOptions();
-            toggleCopyOptionsfukusha1();
-        };
-
-        // 複写オプション追加料金の単価表示
+        // 追加料金を表示
         function displayAdditionalCharge() {
             var copyOptionValue = document.getElementById("fukusha5").value;
             var additionalCharge = 0;
@@ -240,36 +172,50 @@
             document.getElementById("additional-charge-label").innerText = "追加料金: " + additionalCharge + " 円";
         }
 
+        // 複写なしミシン目のプルダウン選択時
+        function toggleCopyOptionsfukusha4() {
+            var selectedValue = document.getElementById("fukusha4").value;
+            var fukusya_page = document.getElementById("fukusha4-label");
 
-        // 見積もり計算ボタンがクリックされたとき動作
+            switch (selectedValue) {
+                case "fukusha_no-0":
+                    fukusya_page.innerText = "複写頁数: 0";
+                    break;
+                case "fukusha_no-1":
+                    fukusya_page.innerText = "複写頁数: 2";
+                    break;
+                case "fukusha_no-2":
+                    fukusya_page.innerText = "複写頁数: 4";
+                    break;
+                case "fukusha_no-3":
+                    fukusya_page.innerText = "複写頁数: 6";
+                    break;
+                default:
+                    fukusya_page.innerText = "複写頁数: 0";
+            }
+        }
+
+
+        // 見積もり計算ボタンの動作
+        // 見積もり計算ボタンの動作
         function calculateEstimate() {
-            // 数量と本文頁数を取得
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
             var content = parseFloat(document.getElementById("content").value) || 0;
-
-            // 商品を取得
             var selectedProduct = document.getElementById("document-type").value;
 
-            // 複写オプションの頁数を無視するかどうか判定
-            var isCopyOptionIgnored = (selectedProduct === "case-card" || selectedProduct === "chiken-plan" || selectedProduct === "medication-diary");
+            // 各複写オプションページ数と厚紙オプションページ数を取得
+            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数: ", "")) || 0;
+            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数: ", "")) || 0;
+            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数: ", "")) || 0;
+            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数: ", "")) || 0;
+            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数: ", "")) || 0;
+            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数: ", "")) || 0;
 
-            // 各複写オプション頁数と厚紙オプション頁数を取得
-            var fukusha1Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha1-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha2Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha2-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha3Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha3-label").innerText.replace("複写頁数：", "")) || 0;
-            var fukusha4Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("fukusha4-label").innerText.replace("複写頁数：", "")) || 0;
-
-            // 各厚紙オプション頁数を取得
-            var atsugami2Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("atsugami2-label").innerText.replace("厚紙頁数：", "")) || 0;
-            var atsugami3Page = isCopyOptionIgnored ? 0 : parseInt(document.getElementById("atsugami3-label").innerText.replace("厚紙頁数：", "")) || 0;
-
-            // 総頁数を計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
+            // 総頁数の計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
             var totalPages = content + fukusha1Page + fukusha2Page + fukusha3Page + fukusha4Page + atsugami2Page + atsugami3Page;
-
-            // totalPagesを表示
             document.getElementById("total-pages-result").innerText = "総頁数: " + totalPages;
 
-            // 商品別に異なるAPIエンドポイントを呼び出す
+            // 商品別に異なるAPIエンドポイントを設定
             let apiUrl;
             if (selectedProduct === "consent-color") {
                 apiUrl = `/orders/api/agree-color/?content=${totalPages}`;
@@ -283,38 +229,41 @@
                 apiUrl = `/orders/api/medication-diary-price/?content=${content}`;
             }
 
-            // 複写オプション追加料金の取得
+            // 追加料金を取得
             var copyOptionValue = document.getElementById("fukusha5").value;
             var additionalCharge = 0;
             switch (copyOptionValue) {
-                case "fukusha_add_price-1":  // カラー3枚複写
+                case "fukusha_add_price-1":
                     additionalCharge = 60;
                     break;
-                case "fukusha_add_price-2":  // カラー2枚複写
+                case "fukusha_add_price-2":
                     additionalCharge = 40;
                     break;
-                case "fukusha_add_price-3":  // 両面3枚複写
+                case "fukusha_add_price-3":
                     additionalCharge = 50;
                     break;
-                case "fukusha_add_price-4":  // 両面2枚複写
+                case "fukusha_add_price-4":
                     additionalCharge = 30;
                     break;
+                default:
+                    additionalCharge = 0;
             }
 
-            // 全ての複写オプションが「複写なし」の場合は50円を単価から減算
-            var isNoCopyOption = (document.getElementById("fukusha1").value === "fukusha1-0" &&
-                                document.getElementById("fukusha2").value === "fukusha2-0" &&
-                                document.getElementById("fukusha3").value === "fukusha3-0");
-
-            // APIにリクエストを送信して見積もり金額を取得
+            // APIリクエストの実行
             if (apiUrl) {
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
                         if (data.unit_price) {
-                            var unitPrice = parseFloat(data.unit_price) + additionalCharge;
+                            var unitPrice = parseFloat(data.unit_price);
 
-                            // 複写なしが選択された場合は50円引く
+                            // すべて複写なしのとき50円引き
+                            var isNoCopyOption = (
+                                document.getElementById("fukusha1").value === "fukusha1-0" &&
+                                document.getElementById("fukusha2").value === "fukusha2-0" &&
+                                document.getElementById("fukusha3").value === "fukusha3-0"
+                            );
+
                             if (isNoCopyOption) {
                                 unitPrice -= 50;
                                 document.getElementById("discount-message").innerText = "すべて複写なし：50円引き";
@@ -322,23 +271,27 @@
                                 document.getElementById("discount-message").innerText = "";  // メッセージをクリア
                             }
 
-                            // 見積もり金額を計算して表示
+                            // 追加料金を単価に加算
+                            unitPrice += additionalCharge;
+
+                            // 見積もり金額の計算
                             var totalPrice = quantity * unitPrice;
                             document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
                             document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
                         } else {
                             document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
                             document.getElementById("estimate-tnk").innerText = "";
-                            document.getElementById("discount-message").innerText = "";
                         }
                     })
                     .catch(error => {
+                        console.error("Fetch Error:", error);
                         document.getElementById("estimate-result").innerText = "エラーが発生しました。";
-                        document.getElementById("discount-message").innerText = "";
                     });
             }
         }
 
+
+        window.onload = toggleCopyOptions;
     </script>
 </head>
 <body>
@@ -355,69 +308,80 @@
         <option value="medication-diary">服薬日誌</option>
     </select>
 
-    <!-- 数量と本文の入力フォーム -->
     <h2>数量と本文</h2>
     <label for="quantity">数量:</label>
     <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br>
 
     <label for="content">本文:</label>
-    <input type="number" id="content" name="content" required><label>頁</label<br><br><br>
+    <input type="number" id="content" name="content" required><label>頁</label><br><br><br>
 
-    <!-- 複写オプションのプルダウンメニュー 5つ -->
     <div id="copy-options">
         <h2>複写オプション</h2>
+        <table class="copy-options-table">
+            <tr>
+                <th>複写</th>
+                <th>選択</th>
+                <th>複写頁数</th>
+                <th>厚紙頁数</th>
+            </tr>
+            <tr>
+                <td>複写1:</td>
+                <td>
+                    <select id="fukusha1" name="fukusha1" onchange="toggleCopyOptionsfukusha1()">
+                        <option value="fukusha1-2">3枚6頁（基本）</option>
+                        <option value="fukusha1-0">複写なし</option>
+                        <option value="fukusha1-1">2枚4頁</option>
+                        <option value="fukusha1-3">4枚8頁</option>
+                        <option value="fukusha1-4">5枚10頁</option>
+                    </select>
+                </td>
+                <td><span id="fukusha1-label">複写頁数: -</span></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>複写2:</td>
+                <td>
+                    <select id="fukusha2" name="fukusha2" onchange="toggleCopyOptionsfukusha2()">
+                        <option value="fukusha2-0">複写なし</option>
+                        <option value="fukusha2-1">2枚4頁</option>
+                        <option value="fukusha2-2">3枚6頁</option>
+                        <option value="fukusha2-3">4枚8頁</option>
+                        <option value="fukusha2-4">5枚10頁</option>
+                    </select>
+                </td>
+                <td><span id="fukusha2-label">複写頁数: -</span></td>
+                <td><span id="atsugami2-label">厚紙頁数: -</span></td>
+            </tr>
+            <tr>
+                <td>複写3:</td>
+                <td>
+                    <select id="fukusha3" name="fukusha3" onchange="toggleCopyOptionsfukusha3()">
+                        <option value="fukusha3-0">複写なし</option>
+                        <option value="fukusha3-1">2枚4頁</option>
+                        <option value="fukusha3-2">3枚6頁</option>
+                        <option value="fukusha3-3">4枚8頁</option>
+                        <option value="fukusha3-4">5枚10頁</option>
+                    </select>
+                </td>
+                <td><span id="fukusha3-label">複写頁数: -</span></td>
+                <td><span id="atsugami3-label">厚紙頁数: -</span></td>
+            </tr>
+            <tr>
+                <td>複写なしミシン目:</td>
+                <td>
+                    <select id="fukusha4" name="fukusha4" onchange="toggleCopyOptionsfukusha4()">
+                        <option value="fukusha_no-0">なし</option>
+                        <option value="fukusha_no-1">1枚2頁</option>
+                        <option value="fukusha_no-2">2枚4頁</option>
+                        <option value="fukusha_no-3">3枚6頁</option>
+                    </select>
+                </td>
+                <td><span id="fukusha4-label">複写頁数: -</span></td>
+                <td></td>
+            </tr>
+        </table>
 
-        <!-- 複写1 -->
-        <label for="fukusha1">複写1:</label>
-        <select id="fukusha1" name="fukusha1" onchange="toggleCopyOptionsfukusha1()">
-            <option value="fukusha1-2">3枚6頁（基本）</option>
-            <option value="fukusha1-0">複写なし</option>
-            <option value="fukusha1-1">2枚4頁</option>
-            <option value="fukusha1-3">4枚8頁</option>
-            <option value="fukusha1-4">5枚10頁</option>
-        </select>
-        <span id="fukusha1-label"></span> 
-        <br><br>
-        
-
-        <!-- 複写2 -->
-        <label for="fukusha2">複写2:</label>
-        <select id="fukusha2" name="fukusha2" onchange="toggleCopyOptionsfukusha2()">
-            <option value="fukusha2-0">複写なし</option>
-            <option value="fukusha2-1">2枚4頁</option>
-            <option value="fukusha2-2">3枚6頁</option>
-            <option value="fukusha2-3">4枚8頁</option>
-            <option value="fukusha2-4">5枚10頁</option>
-        </select>
-        <span id="fukusha2-label"></span>
-        <label>　　</label>
-        <span id="atsugami2-label"></span><br><br>
-
-        <!-- 複写3 -->
-        <label for="fukusha3">複写3:</label>
-        <select id="fukusha3" name="fukusha3" onchange="toggleCopyOptionsfukusha3()">
-            <option value="fukusha3-0">複写なし</option>
-            <option value="fukusha3-1">2枚4頁</option>
-            <option value="fukusha3-2">3枚6頁</option>
-            <option value="fukusha3-3">4枚8頁</option>
-            <option value="fukusha3-4">5枚10頁</option>
-        </select>
-        <span id="fukusha3-label"></span>
-        <label>　　</label>
-        <span id="atsugami3-label"></span><br><br>
-
-        <!-- 複写なしミシン目 -->
-        <label for="fukusha4">複写なしミシン目:</label>
-        <select id="fukusha4" name="fukusha4" onchange="toggleCopyOptionsfukusha4()">
-            <option value="fukusha_no-0">なし</option>
-            <option value="fukusha_no-1">1枚2頁</option>
-            <option value="fukusha_no-2">2枚4頁</option>
-            <option value="fukusha_no-3">3枚6頁</option>
-        </select>
-        <span id="fukusha4-label"></span> 
-        <br><br>
-
-        <!-- 複写オプション追加料金 -->
+        <br>
         <label for="fukusha5">複写オプション追加料金:</label>
         <select id="fukusha5" name="fukusha5" onchange="displayAdditionalCharge()">
             <option value="fukusha_add_price-0">オプションなし</option>
@@ -427,18 +391,16 @@
             <option value="fukusha_add_price-4">両面2枚複写</option>
         </select>
         <span id="additional-charge-label">追加料金: - 円</span>
-        <br>
 
-        <p id="total-pages-result">総頁数: -</p><br>
+        <p id="total-pages-result">総頁数: -</p>
+        <p id="discount-message"></p>
     </div>
-    <!-- 見積もり計算ボタン -->
+
     <button type="button" onclick="calculateEstimate()">見積もり計算</button><br><br>
 
-    <!-- 見積もり結果を表示するラベル -->
+    
     <p id="estimate-result">見積もり金額: - 円</p>
-
-    <!-- 単価を表示するラベル -->
-    <p id="estimate-tnk">単価: - 円</p> <p id="discount-message"></p> 
-
+    <p id="estimate-tnk">単価: - 円</p>
+    
 </body>
 </html>

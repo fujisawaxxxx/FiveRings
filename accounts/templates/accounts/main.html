@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面0007</title>
+    <title>メイン画面0008</title>
     <style>
         .copy-options-table {
             width: 100%;
@@ -54,7 +54,6 @@
             document.getElementById("atsugami2-label").innerText = "-";
             document.getElementById("atsugami3-label").innerText = "-";
         }
-
 
         // 複写1のプルダウン選択時
         function toggleCopyOptionsfukusha1() {
@@ -197,11 +196,19 @@
 
 
         // 見積もり計算ボタンの動作
-        // 見積もり計算ボタンの動作
         function calculateEstimate() {
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
             var content = parseFloat(document.getElementById("content").value) || 0;
             var selectedProduct = document.getElementById("document-type").value;
+
+            // 数量または本文が0の場合
+            if (quantity === 0 || content === 0) {
+                document.getElementById("estimate-result").innerText = "数量または本文が未入力です。";
+                document.getElementById("estimate-tnk").innerText = ""; // 単価をクリア
+                document.getElementById("discount-message").innerText = ""; // 割引メッセージをクリア
+                document.getElementById("total-pages-result").innerText = "総頁数: -"; // 総頁数をクリア
+                return; // 計算処理を中断
+            }
 
             // 各複写オプションページ数と厚紙オプションページ数を取得
             var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("", "")) || 0;
@@ -268,7 +275,7 @@
                                 unitPrice -= 50;
                                 document.getElementById("discount-message").innerText = "すべて複写なし：50円引き";
                             } else {
-                                document.getElementById("discount-message").innerText = "";  // メッセージをクリア
+                                document.getElementById("discount-message").innerText = ""; // メッセージをクリア
                             }
 
                             // 追加料金を単価に加算

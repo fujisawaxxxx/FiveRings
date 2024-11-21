@@ -2,10 +2,12 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面0008</title>
+    <title>メイン画面0009</title>
+
+    <!-- テーブルのデザイン -->
     <style>
         .copy-options-table {
-            width: 100%;
+            width: 50%;
             border-collapse: collapse;
         }
         .copy-options-table th, .copy-options-table td {
@@ -17,6 +19,7 @@
             background-color: #f2f2f2;
         }
     </style>
+
     <script>
         //商品のプルダウン選択時
         function toggleCopyOptions() {
@@ -55,11 +58,18 @@
             document.getElementById("atsugami3-label").innerText = "-";
         }
 
-        // 複写1のプルダウン選択時
+        // ★★★★★　　複写1のプルダウン選択時START　★★★★★
+        // 「複写1」オプションのプルダウンメニューが変更されたときの動作を定義した関数
         function toggleCopyOptionsfukusha1() {
             var selectedValue = document.getElementById("fukusha1").value;
-            var fukusya_page = document.getElementById("fukusha1-label");
+            // onchange="toggleCopyOptionsfukusha1()"によって呼び出されて処理を実行しているが、
+            // JS側はどこから呼び出されたはわかっていない為、まずid="fukusha1" の <select> 要素から呼び出されたことを教える
 
+
+            var fukusya_page = document.getElementById("fukusha1-label");
+            // HTMLから、id="fukusha1-label" を持つ要素（この場合は <span> タグ）を探して取得。
+            // fukusya_page という変数は、<span id="fukusha1-label"> を操作できる
+            
             switch (selectedValue) {
                 case "fukusha1-0":
                     fukusya_page.innerText = "0";
@@ -79,9 +89,14 @@
                 default:
                     fukusya_page.innerText = "0";
             }
-        }
+            // 選択された値に応じて、ラベル（fukusha1-label）のブラウザ上のテキストを変更
 
-        // 複写2のプルダウン選択時
+        }
+        // ★★★★★　　複写1のプルダウン選択時END 　★★★★★
+
+
+
+        // ★★★★★　　複写2のプルダウン選択時START　★★★★★
         function toggleCopyOptionsfukusha2() {
             var selectedValue = document.getElementById("fukusha2").value;
             var fukusya_page = document.getElementById("fukusha2-label");
@@ -113,7 +128,9 @@
                     atsugami_page.innerText = "0";
             }
         }
-        // 複写3のプルダウン選択時
+        // ★★★★★　　複写2のプルダウン選択時END 　★★★★★
+
+        // ★★★★★　　複写3のプルダウン選択時START　★★★★★
         function toggleCopyOptionsfukusha3() {
             var selectedValue = document.getElementById("fukusha3").value;
             var fukusya_page = document.getElementById("fukusha3-label");
@@ -145,6 +162,31 @@
                     atsugami_page.innerText = "0";
             }
         }
+        // ★★★★★　　複写3のプルダウン選択時END 　★★★★★
+
+        // ★★★★★　　複写なしミシン目のプルダウン選択時START　★★★★★
+        function toggleCopyOptionsfukusha4() {
+            var selectedValue = document.getElementById("fukusha4").value;
+            var fukusya_page = document.getElementById("fukusha4-label");
+
+            switch (selectedValue) {
+                case "fukusha_no-0":
+                    fukusya_page.innerText = "0";
+                    break;
+                case "fukusha_no-1":
+                    fukusya_page.innerText = "2";
+                    break;
+                case "fukusha_no-2":
+                    fukusya_page.innerText = "4";
+                    break;
+                case "fukusha_no-3":
+                    fukusya_page.innerText = "6";
+                    break;
+                default:
+                    fukusya_page.innerText = "0";
+            }
+        }
+        // ★★★★★　　複写なしミシン目のプルダウン選択時END 　★★★★★
 
         // 追加料金を表示
         function displayAdditionalCharge() {
@@ -171,28 +213,6 @@
             document.getElementById("additional-charge-label").innerText = "追加料金: " + additionalCharge + " 円";
         }
 
-        // 複写なしミシン目のプルダウン選択時
-        function toggleCopyOptionsfukusha4() {
-            var selectedValue = document.getElementById("fukusha4").value;
-            var fukusya_page = document.getElementById("fukusha4-label");
-
-            switch (selectedValue) {
-                case "fukusha_no-0":
-                    fukusya_page.innerText = "0";
-                    break;
-                case "fukusha_no-1":
-                    fukusya_page.innerText = "2";
-                    break;
-                case "fukusha_no-2":
-                    fukusya_page.innerText = "4";
-                    break;
-                case "fukusha_no-3":
-                    fukusya_page.innerText = "6";
-                    break;
-                default:
-                    fukusya_page.innerText = "0";
-            }
-        }
 
 
         // 見積もり計算ボタンの動作
@@ -305,7 +325,7 @@
     <h1>メイン画面</h1>
     <p>ログイン成功！</p>
 
-    <!-- 商品を選択するプルダウンメニュー -->
+    <!-- ★★★★★　商品を選択するプルダウンメニュー　START　★★★★★-->
     <label for="document-type">商品を選択してください:</label>
     <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
         <option value="consent-color">同意説明書（カラー）</option>
@@ -315,24 +335,45 @@
         <option value="medication-diary">服薬日誌</option>
     </select>
 
+    <!-- onchange="toggleCopyOptions()": 商品を選択したときに、JavaScript関数toggleCopyOptionsを実行。 -->
+    <!-- ★★★★★　商品を選択するプルダウンメニュー END　　★★★★★-->
+
+
+
+    <!-- ★★★★★　数量と本文の入力フィールド　START　★★★★★-->
     <h2>数量と本文</h2>
     <label for="quantity">数量:</label>
-    <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br>
+    <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br> 
 
     <label for="content">本文:</label>
-    <input type="number" id="content" name="content" required><label>頁</label><br><br><br>
+    <input type="number" id="content" name="content" min="2" step="2" required><label>頁</label><br><br><br>
 
+    <!--
+    ・type="number": 数値専用の入力欄。
+    ・id="quantity"とid="content": JavaScriptでこれらの値を取得するための識別子。
+    ・min="1": 数量は1以上で入力する制限。
+    ・step="1"：増減±1。
+    ・required: 入力必須フィールド。 -->
+
+    <!-- ★★★★★　数量と本文の入力フィールド END　　★★★★★-->
+
+    <!-- ★★★★★　複写オプションの設定（テーブル）　START　★★★★★-->
     <div id="copy-options">
         <h2>複写オプション</h2>
         <table class="copy-options-table">
             <tr>
+                <!-- テーブルのヘッダー -->
                 <th>複写</th>
                 <th>選択</th>
                 <th>複写頁数</th>
                 <th>厚紙頁数</th>
             </tr>
             <tr>
+                <!-- テーブル1行目 -->
+                <!-- 1行目1列目 -->
                 <td>複写1:</td>
+
+                <!-- 1行目2列目 -->
                 <td>
                     <select id="fukusha1" name="fukusha1" onchange="toggleCopyOptionsfukusha1()">
                         <option value="fukusha1-2">3枚6頁（基本）</option>
@@ -341,12 +382,24 @@
                         <option value="fukusha1-3">4枚8頁</option>
                         <option value="fukusha1-4">5枚10頁</option>
                     </select>
+                    <!-- デフォルトで最初の選択肢（3枚6頁（基本））が表示されます。
+                     この要素は「複写1」に関連し、選択が変更されると onchange 属性で指定された
+                     関数 toggleCopyOptionsfukusha1 が呼び出される -->
                 </td>
+
+                <!-- 1行目3列目 -->
                 <td><span id="fukusha1-label">-</span></td>
+                <!-- 初期状態は「-」 -->
+
+                <!-- 1行目4列目 -->
                 <td></td>
             </tr>
             <tr>
+                <!-- テーブル2行目 -->
+                <!-- 2行目1列目 -->
                 <td>複写2:</td>
+
+                <!-- 2行目2列目 -->
                 <td>
                     <select id="fukusha2" name="fukusha2" onchange="toggleCopyOptionsfukusha2()">
                         <option value="fukusha2-0">複写なし</option>
@@ -356,11 +409,18 @@
                         <option value="fukusha2-4">5枚10頁</option>
                     </select>
                 </td>
+
+                <!-- 2行目3列目 -->
                 <td><span id="fukusha2-label">-</span></td>
+
+                <!-- 2行目4列目 -->
                 <td><span id="atsugami2-label">-</span></td>
             </tr>
             <tr>
+                <!-- テーブル3行目 -->
+                <!-- 3行目1列目 -->
                 <td>複写3:</td>
+                <!-- 3行目2列目 -->
                 <td>
                     <select id="fukusha3" name="fukusha3" onchange="toggleCopyOptionsfukusha3()">
                         <option value="fukusha3-0">複写なし</option>
@@ -370,11 +430,16 @@
                         <option value="fukusha3-4">5枚10頁</option>
                     </select>
                 </td>
+                <!-- 3行目3列目 -->
                 <td><span id="fukusha3-label">-</span></td>
+                <!-- 3行目4列目 -->
                 <td><span id="atsugami3-label">-</span></td>
             </tr>
             <tr>
+                <!-- テーブル4行目 -->
+                <!-- 4行目1列目 -->
                 <td>複写なしミシン目:</td>
+                <!-- 4行目2列目 -->
                 <td>
                     <select id="fukusha4" name="fukusha4" onchange="toggleCopyOptionsfukusha4()">
                         <option value="fukusha_no-0">なし</option>
@@ -383,10 +448,13 @@
                         <option value="fukusha_no-3">3枚6頁</option>
                     </select>
                 </td>
+                <!-- 4行目3列目 -->
                 <td><span id="fukusha4-label">-</span></td>
+                <!-- 4行目4列目 -->
                 <td></td>
             </tr>
         </table>
+        <!-- ★★★★★　複写オプションの設定（テーブル）　END 　★★★★★-->
 
         <br>
         <label for="fukusha5">複写オプション追加料金:</label>

@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>メイン画面0011</title>
+    <title>メイン画面0012</title>
 
     <!-- テーブルのデザイン -->
     <style>
@@ -324,6 +324,20 @@
         }
 
 
+        function order_create() {
+            // 必要なデータを取得
+            const productType = document.getElementById("document-type").value;
+            const quantity = document.getElementById("quantity").value || "-";
+            const content = document.getElementById("content").value || "-";
+            const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
+            const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
+
+            // URLにデータを渡して遷移
+            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}&quantity=${encodeURIComponent(quantity)}&content=${encodeURIComponent(content)}&unit_price=${encodeURIComponent(unitPrice)}&estimate_result=${encodeURIComponent(estimateResult)}`;
+            window.location.href = url;
+        }
+
+
         window.onload = toggleCopyOptions;
     </script>
 </head>
@@ -463,7 +477,7 @@
         <!-- ★★★★★　複写オプションの設定（テーブル）　END 　★★★★★-->
 
         <br>
-        <label for="fukusha5">複写オプション追加料金:</label>
+        <label for="fukusha5">複写オプション:</label>
         <select id="fukusha5" name="fukusha5" onchange="displayAdditionalCharge()">
             <option value="fukusha_add_price-0">オプションなし</option>
             <option value="fukusha_add_price-1">カラー3枚複写</option>
@@ -482,6 +496,8 @@
     
     <p id="estimate-result">見積もり金額: - 円</p>
     <p id="estimate-tnk">単価: - 円</p>
-    
+    <br>
+    <button type="button" onclick="order_create()">注文書作成</button>
+    <br><br>
 </body>
 </html>

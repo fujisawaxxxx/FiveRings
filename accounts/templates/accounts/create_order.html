@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>注文書作成</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        function back_main() {
+            window.location.href = "{% url 'main' %}";
+        }
+    </script>
+</head>
+<body>
+    <h1>注文書作成</h1>
+    <table>
+        <tr>
+            <th>項目</th>
+            <th>内容</th>
+        </tr>
+        <tr>
+            <td>商品の種類</td>
+            <td>{{ product_type }}</td>
+        </tr>
+        <tr>
+            <td>数量</td>
+            <td>{{ quantity }}</td>
+        </tr>
+        <tr>
+            <td>本文</td>
+            <td>{{ content }}</td>
+        </tr>
+        <tr>
+            <td>単価</td>
+            <td>{{ unit_price }} 円</td>
+        </tr>
+        <tr>
+            <td>見積もり金額</td>
+            <td>{{ estimate_result }} 円</td>
+        </tr>
+    </table>
+    <br><br>
+    <button type="button" onclick="send_mail_create_pdf()">発注依頼</button><br>
+    <button type="button" onclick="back_main()">戻る</button>
+</body>
+</html>

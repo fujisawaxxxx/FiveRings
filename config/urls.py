@@ -5,7 +5,7 @@ from django.shortcuts import redirect  # リダイレクトを行うために必
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),  # 正しい位置に記述されていますか？
-    path('orders/', include('orders.urls')),      # ordersアプリのルーティング
+    path('items/', include('items.urls')),      # itemsアプリのルーティング
 
     path('', lambda request: redirect('login')),  # ルートURLを /accounts/login/ にリダイレクト
 ]

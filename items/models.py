@@ -55,4 +55,3 @@ class Fukuyaku (models.Model):
     class Meta:
         verbose_name = "服薬日誌"
         verbose_name_plural = "服薬日誌"
-

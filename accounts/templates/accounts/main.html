@@ -251,15 +251,15 @@
             // 商品別に異なるAPIエンドポイントを設定
             let apiUrl;
             if (selectedProduct === "consent-color") {
-                apiUrl = `/orders/api/agree-color/?content=${totalPages}`;
+                apiUrl = `/items/api/agree-color/?content=${totalPages}`;
             } else if (selectedProduct === "consent-monochrome") {
-                apiUrl = `/orders/api/agree-monochrome/?content=${totalPages}`;
+                apiUrl = `/items/api/agree-monochrome/?content=${totalPages}`;
             } else if (selectedProduct === "case-card") {
-                apiUrl = `/orders/api/casecard-price/?content=${content}`;
+                apiUrl = `/items/api/casecard-price/?content=${content}`;
             } else if (selectedProduct === "chiken-plan") {
-                apiUrl = `/orders/api/chiken-plan-price/?content=${content}`;
+                apiUrl = `/items/api/chiken-plan-price/?content=${content}`;
             } else if (selectedProduct === "medication-diary") {
-                apiUrl = `/orders/api/medication-diary-price/?content=${content}`;
+                apiUrl = `/items/api/medication-diary-price/?content=${content}`;
             }
 
             // 追加料金を取得

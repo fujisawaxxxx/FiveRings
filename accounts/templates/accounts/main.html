@@ -27,6 +27,47 @@
     </style>
 
     <script>
+
+        // ファイルアップロード
+        function uploadFile() {
+        const input = document.getElementById('file-input');
+        const fileNameSpan = document.getElementById('file-name');
+        
+            // ファイルが選択されているか確認
+            if (input.files.length > 0) {
+                    const file = input.files[0];
+
+                    // フォームデータを作成
+                    const formData = new FormData();
+                    formData.append('uploaded_file', file);
+
+                    // CSRFトークンの取得
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    // Fetch APIでPOSTリクエストを送信
+                    fetch("{% url 'upload_file' %}", {
+                        method: "POST",
+                        headers: {
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            fileNameSpan.textContent = `アップロード完了: ${file.name}`;
+                        } else {
+                            fileNameSpan.textContent = "アップロード失敗";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("アップロードエラー:", error);
+                        fileNameSpan.textContent = "エラーが発生しました";
+                    });
+            }
+        }
+
+
+
         //商品のプルダウン選択時
         function toggleCopyOptions() {
             var selectedProduct = document.getElementById("document-type").value;
@@ -345,6 +386,20 @@
     <h1>メイン画面</h1>
     <p>ログイン成功！</p>
 
+    <br><br>
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="file-input">ファイルを選択してください:</label>
+        <input 
+            id="file-input" 
+            type="file" 
+            name="uploaded_file" 
+            onchange="uploadFile()">
+        <span id="file-name"></span>
+    </form>
+    <br><br>
+
+
     <!-- ★★★★★　商品を選択するプルダウンメニュー　START　★★★★★-->
     <label for="document-type">商品を選択してください:</label>
     <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
@@ -498,6 +553,9 @@
     <p id="estimate-tnk">単価: - 円</p>
     <br>
     <button type="button" onclick="order_create()">注文書作成</button>
-    <br><br>
+    <br><br><br>
+    
+    
+    <br><br><br>
 </body>
 </html>

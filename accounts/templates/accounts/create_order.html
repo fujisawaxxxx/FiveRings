@@ -51,6 +51,19 @@
             <td>見積もり金額</td>
             <td>{{ estimate_result }} 円</td>
         </tr>
+        <tr>
+            <td>添付ファイル</td>
+            <td>
+                {% if attached_file and attached_file != '-' %}
+                    <a href="{{ MEDIA_URL }}{{ attached_file }}" target="_blank">
+                        {{ original_filename }}  <!-- タイムスタンプ付きのファイル名から元のファイル名に変更 -->
+                    </a>
+                {% else %}
+                    添付ファイルなし
+                {% endif %}
+            </td>
+        </tr>
+        
     </table>
     <br><br>
     <button type="button" onclick="send_mail_create_pdf()">発注依頼</button><br>

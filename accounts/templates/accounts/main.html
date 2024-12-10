@@ -30,42 +30,39 @@
 
         // ファイルアップロード
         function uploadFile() {
-        const input = document.getElementById('file-input');
-        const fileNameSpan = document.getElementById('file-name');
-        
-            // ファイルが選択されているか確認
+            const input = document.getElementById('file-input');
+            const fileNameSpan = document.getElementById('file-name');
+            
             if (input.files.length > 0) {
-                    const file = input.files[0];
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('uploaded_file', file);
 
-                    // フォームデータを作成
-                    const formData = new FormData();
-                    formData.append('uploaded_file', file);
+                const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-                    // CSRFトークンの取得
-                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                    // Fetch APIでPOSTリクエストを送信
-                    fetch("{% url 'upload_file' %}", {
-                        method: "POST",
-                        headers: {
-                            'X-CSRFToken': csrfToken
-                        },
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
-                            fileNameSpan.textContent = `アップロード完了: ${file.name}`;
-                        } else {
-                            fileNameSpan.textContent = "アップロード失敗";
-                        }
-                    })
-                    .catch(error => {
-                        console.error("アップロードエラー:", error);
-                        fileNameSpan.textContent = "エラーが発生しました";
-                    });
+                fetch("{% url 'upload_file' %}", {
+                    method: "POST",
+                    headers: {
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: formData
+                })
+                .then(response => response.json())  // JSONレスポンスをパース
+                .then(data => {
+                    if (data.file_name) {  // サーバーから返されたファイル名を使用
+                        fileNameSpan.textContent = `アップロード完了: ${data.original_filename}`;  // 元のファイル名を表示
+                        document.getElementById('uploaded-file-name').value = data.file_name;
+                        document.getElementById('original-file-name').value = data.original_filename;  // 元のファイル名を保存
+                    } else {
+                        fileNameSpan.textContent = "アップロード失敗";
+                    }
+                })
+                .catch(error => {
+                    console.error("アップロードエラー:", error);
+                    fileNameSpan.textContent = "エラーが発生しました";
+                });
             }
         }
-
 
 
         //商品のプルダウン選択時
@@ -372,9 +369,10 @@
             const content = document.getElementById("content").value || "-";
             const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
             const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
-
+            const attachedFile = document.getElementById("uploaded-file-name").value || "-";  // 追加
+            const originalFilename = document.getElementById('original-file-name').value || '-';  // 追加
             // URLにデータを渡して遷移
-            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}&quantity=${encodeURIComponent(quantity)}&content=${encodeURIComponent(content)}&unit_price=${encodeURIComponent(unitPrice)}&estimate_result=${encodeURIComponent(estimateResult)}`;
+            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}&quantity=${encodeURIComponent(quantity)}&content=${encodeURIComponent(content)}&unit_price=${encodeURIComponent(unitPrice)}&estimate_result=${encodeURIComponent(estimateResult)}&attached_file=${encodeURIComponent(attachedFile)}&original_filename=${encodeURIComponent(originalFilename)}`;  // original_filenameパラメータを追加
             window.location.href = url;
         }
 
@@ -396,6 +394,8 @@
             name="uploaded_file" 
             onchange="uploadFile()">
         <span id="file-name"></span>
+        <input type="hidden" id="uploaded-file-name" value="">  <!-- 追加 -->
+        <input type="hidden" id="original-file-name" value="">  <!-- 追加 -->
     </form>
     <br><br>
 

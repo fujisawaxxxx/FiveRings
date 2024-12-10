@@ -21,7 +21,15 @@ def create_order_view(request):
     estimate_result = request.GET.get('estimate_result', '-')
     # 添付ファイル名を取得
     attached_file = request.GET.get('attached_file', '-')
-    original_filename = request.GET.get('original_filename', '-')  # 追加
+    original_filename = request.GET.get('original_filename', '-')
+    
+    # 同意説明書用の追加パラメータを取得
+    copy_option1 = request.GET.get('copy_option1', '-')
+    copy_option2 = request.GET.get('copy_option2', '-')
+    copy_option3 = request.GET.get('copy_option3', '-')
+    perforation = request.GET.get('perforation', '-')
+    copy_option_extra = request.GET.get('copy_option_extra', '-')
+    total_pages = request.GET.get('total_pages', '-')
     
     context = {
         'product_type': product_type,
@@ -29,9 +37,16 @@ def create_order_view(request):
         'content': content,
         'unit_price': unit_price,
         'estimate_result': estimate_result,
-        'attached_file': attached_file,  # コンテキストに添付ファイル情報を追加
-        'original_filename': original_filename,  # 追加
-        'MEDIA_URL': settings.MEDIA_URL,  # メディアURLを追加
+        'attached_file': attached_file,
+        'original_filename': original_filename,
+        'MEDIA_URL': settings.MEDIA_URL,
+        # 同意説明書用の追加コンテキスト
+        'copy_option1': copy_option1,
+        'copy_option2': copy_option2,
+        'copy_option3': copy_option3,
+        'perforation': perforation,
+        'copy_option_extra': copy_option_extra,
+        'total_pages': total_pages,
     }
 
     return render(request, 'accounts/create_order.html', context)

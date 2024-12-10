@@ -77,7 +77,33 @@
                 {% endif %}
             </td>
         </tr>
-        
+        <!-- 同意説明書の場合のみ表示する追加情報 -->
+        {% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}
+        <tr>
+            <td>複写1</td>
+            <td>{{ copy_option1 }}</td>
+        </tr>
+        <tr>
+            <td>複写2</td>
+            <td>{{ copy_option2 }}</td>
+        </tr>
+        <tr>
+            <td>複写3</td>
+            <td>{{ copy_option3 }}</td>
+        </tr>
+        <tr>
+            <td>複写なしミシン目</td>
+            <td>{{ perforation }}</td>
+        </tr>
+        <tr>
+            <td>複写オプション</td>
+            <td>{{ copy_option_extra }}</td>
+        </tr>
+        <tr>
+            <td>総頁数</td>
+            <td>{{ total_pages }}</td>
+        </tr>
+        {% endif %}
     </table>
     <br><br>
     <button type="button" onclick="send_mail_create_pdf()">発注依頼</button><br>

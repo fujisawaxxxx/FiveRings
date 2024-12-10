@@ -369,10 +369,38 @@
             const content = document.getElementById("content").value || "-";
             const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
             const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
-            const attachedFile = document.getElementById("uploaded-file-name").value || "-";  // 追加
-            const originalFilename = document.getElementById('original-file-name').value || '-';  // 追加
+            const attachedFile = document.getElementById("uploaded-file-name").value || "-";
+            const originalFilename = document.getElementById('original-file-name').value || '-';
+
+            // 同意説明書の場合のみ追加パラメータを取得
+            let additionalParams = '';
+            if (productType === 'consent-color' || productType === 'consent-monochrome') {
+                // 複写オプションの値を取得（選択されたテキストを取得）
+                const fukusha1 = document.getElementById("fukusha1").options[document.getElementById("fukusha1").selectedIndex].text;
+                const fukusha2 = document.getElementById("fukusha2").options[document.getElementById("fukusha2").selectedIndex].text;
+                const fukusha3 = document.getElementById("fukusha3").options[document.getElementById("fukusha3").selectedIndex].text;
+                const fukusha4 = document.getElementById("fukusha4").options[document.getElementById("fukusha4").selectedIndex].text;
+                const fukusha5 = document.getElementById("fukusha5").options[document.getElementById("fukusha5").selectedIndex].text;
+                const totalPages = document.getElementById("total-pages-result").innerText.replace("総頁数: ", "") || "-";
+
+                additionalParams = `&copy_option1=${encodeURIComponent(fukusha1)}`
+                    + `&copy_option2=${encodeURIComponent(fukusha2)}`
+                    + `&copy_option3=${encodeURIComponent(fukusha3)}`
+                    + `&perforation=${encodeURIComponent(fukusha4)}`
+                    + `&copy_option_extra=${encodeURIComponent(fukusha5)}`
+                    + `&total_pages=${encodeURIComponent(totalPages)}`;
+            }
+
             // URLにデータを渡して遷移
-            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}&quantity=${encodeURIComponent(quantity)}&content=${encodeURIComponent(content)}&unit_price=${encodeURIComponent(unitPrice)}&estimate_result=${encodeURIComponent(estimateResult)}&attached_file=${encodeURIComponent(attachedFile)}&original_filename=${encodeURIComponent(originalFilename)}`;  // original_filenameパラメータを追加
+            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}`
+                + `&quantity=${encodeURIComponent(quantity)}`
+                + `&content=${encodeURIComponent(content)}`
+                + `&unit_price=${encodeURIComponent(unitPrice)}`
+                + `&estimate_result=${encodeURIComponent(estimateResult)}`
+                + `&attached_file=${encodeURIComponent(attachedFile)}`
+                + `&original_filename=${encodeURIComponent(originalFilename)}`
+                + additionalParams;
+
             window.location.href = url;
         }
 

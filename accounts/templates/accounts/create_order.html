@@ -33,7 +33,21 @@
         </tr>
         <tr>
             <td>商品の種類</td>
-            <td>{{ product_type }}</td>
+            <td>
+                {% if product_type == 'consent-color' %}
+                    同意説明書（カラー）
+                {% elif product_type == 'consent-monochrome' %}
+                    同意説明書（モノクロ）
+                {% elif product_type == 'case-card' %}
+                    ケースカード（症例報告書）
+                {% elif product_type == 'chiken-plan' %}
+                    治験実施計画書
+                {% elif product_type == 'medication-diary' %}
+                    服薬日誌
+                {% else %}
+                    {{ product_type }}
+                {% endif %}
+            </td>
         </tr>
         <tr>
             <td>数量</td>

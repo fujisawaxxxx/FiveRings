@@ -55,3 +55,15 @@ class Fukuyaku (models.Model):
     class Meta:
         verbose_name = "服薬日誌"
         verbose_name_plural = "服薬日誌"
+
+class ParticipationCard(models.Model):
+
+    cardtype = models.CharField(max_length=100, verbose_name="カードの種類")
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="単価")
+
+    def __str__(self):
+        return f"{self.cardtype} - {self.unit_price}円"
+
+    class Meta:
+        verbose_name = "参加カード"
+        verbose_name_plural = "参加カード"

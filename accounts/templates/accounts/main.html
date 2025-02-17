@@ -260,6 +260,8 @@
                 apiUrl = `/items/api/chiken-plan-price/?content=${content}`;
             } else if (selectedProduct === "medication-diary") {
                 apiUrl = `/items/api/medication-diary-price/?content=${content}`;
+            } else if (selectedProduct === "participation-card") {
+                apiUrl = `/items/api/participation-card/?card_type=${cardType}`;
             }
 
             // 追加料金を取得
@@ -353,6 +355,7 @@
         <option value="case-card">ケースカード（症例報告書）</option>
         <option value="chiken-plan">治験実施計画書</option>
         <option value="medication-diary">服薬日誌</option>
+        <option value="participation-card">参加カード</option>
     </select>
 
     <!-- onchange="toggleCopyOptions()": 商品を選択したときに、JavaScript関数toggleCopyOptionsを実行。 -->

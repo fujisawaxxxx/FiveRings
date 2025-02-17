@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import JsonResponse
-from .models import CaseCard,Chiken,Fukuyaku,AgreementColor,AgreementMonochrome
+from .models import CaseCard,Chiken,Fukuyaku,AgreementColor,AgreementMonochrome,ParticipationCard
 
 # 同意説明書カラー
 def get_agree_color(request):
@@ -76,3 +76,15 @@ def get_medication_diary_price(request):
             return JsonResponse({'error': '服薬日誌が見つかりません'}, status=404)
     else:
         return JsonResponse({'error': '服薬日誌のパラメーターが見つかりました'}, status=400)
+
+def get_participation_card_price(request):
+    cardtype = request.GET.get('cardtype', None)
+
+    if cardtype is not None:
+        try:
+            participation_card = ParticipationCard.objects.get(cardtype=cardtype)
+            return JsonResponse({'unit_price': participation_card.unit_price})
+        except ParticipationCard.DoesNotExist:
+            return JsonResponse({'error': '参加カードが見つかりません'}, status=404)
+    else:
+        return JsonResponse({'error': '参加カードのパラメーターが不正です'}, status=400)

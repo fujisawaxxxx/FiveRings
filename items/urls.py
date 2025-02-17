@@ -13,4 +13,6 @@ urlpatterns = [
     path('api/chiken-plan-price/', views.get_chiken_plan_price, name='get_chiken_plan_price'),
     # 服薬日誌の価格取得API
     path('api/medication-diary-price/', views.get_medication_diary_price, name='get_medication_diary_price'),
+    # 参加カードの価格取得API
+    path('api/participation-card/', views.get_participation_card_price, name='get_participation_card_price'),
 ]

@@ -382,12 +382,12 @@
     </div>
     <!-- 参加カードの種類選択 -->
     <div id="card-type-field" style="display: none;">
-        <label for="card-type">参加カードの種類:</label>
-        <select id="card-type" name="card_type">
+        <label for="sanka-card-type">参加カードの種類:</label>
+        <select id="sanka-card-type" name="sanka_card_type">
             <option value="">選択してください</option>
-            <option value="type1">来院カード</option>
-            <option value="type2">服薬カード</option>
-            <option value="type3">検査カード</option>
+            {% for card_type in participation_cards %}
+                <option value="{{ card_type }}">{{ card_type }}</option>
+            {% endfor %}
         </select><br><br>
     </div>
 

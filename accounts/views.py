@@ -1,10 +1,17 @@
 # accounts/views.py
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from items.models import ParticipationCard  # 追加
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
-    return render(request, 'accounts/main.html')
+    # 管理画面で登録された参加カードの種類を取得
+    participation_cards = ParticipationCard.objects.all().values_list('cardtype', flat=True)
+    
+    context = {
+        'participation_cards': participation_cards,
+    }
+    return render(request, 'accounts/main.html', context)
 
 @login_required  # 注文書作成画面へのビュー
 def create_order_view(request):

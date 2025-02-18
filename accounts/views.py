@@ -32,6 +32,7 @@ def create_order_view(request):
         'fukusha5': request.GET.get('fukusha5', '-'),
         'total_pages': request.GET.get('total_pages', '-'),
         'additional_print': request.GET.get('additional_print', 'false'),
+        'no_holes': request.GET.get('no_holes', 'false'),
         'remarks': request.GET.get('remarks', '-'),
     }
 

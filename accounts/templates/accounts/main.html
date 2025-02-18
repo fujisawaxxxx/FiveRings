@@ -30,31 +30,49 @@
         //商品のプルダウン選択時
         function toggleCopyOptions() {
             var selectedProduct = document.getElementById("document-type").value;
+            
+            // 各要素の取得と存在チェック
             var copyOptions = document.getElementById("copy-options");
-            var contentField = document.getElementById("content-field");  // 追加した div を取得
+            var contentField = document.getElementById("content-field");
+            var noHolesOption = document.getElementById("no-holes-option");
+            var cardTypeField = document.getElementById("card-type-field");
+            var quantityField = document.getElementById("quantity-field");
 
-            // 商品選択に応じて複写オプションの表示/非表示を切り替え
-            if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
-                copyOptions.style.display = "block";
-            } else {
-                copyOptions.style.display = "none";
+            console.log("Selected Product:", selectedProduct); // デバッグ用
+
+            // 2穴不要オプションの表示/非表示を制御
+            if (noHolesOption) {
+                noHolesOption.style.display = selectedProduct === "case-card" ? "block" : "none";
             }
 
-            // 参加カードが選択された場合、本文フィールドを非表示にする
-            if (selectedProduct === "participation-card") {
-                contentField.style.display = "none";
-            } else {
-                contentField.style.display = "block";
+            // 複写オプションの表示/非表示を制御
+            if (copyOptions) {
+                copyOptions.style.display = 
+                    (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") 
+                    ? "block" : "none";
             }
+
+            // 本文フィールドと参加カード種類の表示/非表示を制御
+            if (contentField && cardTypeField) {
+                if (selectedProduct === "participation-card") {
+                    contentField.style.display = "none";
+                    cardTypeField.style.display = "block";
+                } else {
+                    contentField.style.display = "block";
+                    cardTypeField.style.display = "none";
+                }
+            }
+
+            // 見積もり金額をクリア
+            document.getElementById("estimate-result").innerText = "見積もり金額: - 円";
+            document.getElementById("estimate-tnk").innerText = "単価: - 円";
+            document.getElementById("discount-message").innerText = "";
+            document.getElementById("additional-charge-label").innerText = "追加料金: - 円";
 
             // 以下の項目をリセット
             document.getElementById("quantity").value = ""; // 数量をクリア
             document.getElementById("content").value = ""; // 本文をクリア
             document.getElementById("total-pages-result").innerText = "総頁数: -"; // 総頁数をクリア
-            document.getElementById("estimate-result").innerText = "見積もり金額: - 円"; // 見積もり金額をクリア
-            document.getElementById("estimate-tnk").innerText = "単価: - 円"; // 単価をクリア
-            document.getElementById("discount-message").innerText = ""; // 割引メッセージをクリア
-            document.getElementById("additional-charge-label").innerText = "追加料金: - 円"; // 追加料金をクリア
 
             // 複写オプションの選択状態をリセット
             document.getElementById("fukusha1").selectedIndex = 0; // 複写1をリセット
@@ -440,6 +458,9 @@
             const additionalPrint = document.getElementById("additional-print").checked;
             const remarks = document.getElementById("remarks").value || "-";
 
+            // 2穴不要の状態を取得
+            const noHoles = document.getElementById("no-holes")?.checked || false;
+
             // URLにデータを渡して遷移
             const url = `{% url 'create_order' %}?` + 
                 `product_type=${encodeURIComponent(productType)}` +
@@ -457,6 +478,7 @@
                 `&fukusha5=${encodeURIComponent(fukusha5)}` +
                 `&total_pages=${encodeURIComponent(totalPages)}` +
                 `&additional_print=${encodeURIComponent(additionalPrint)}` +
+                `&no_holes=${encodeURIComponent(noHoles)}` +
                 `&remarks=${encodeURIComponent(remarks)}`;
 
             window.location.href = url;
@@ -489,7 +511,7 @@
         });
     </script>
     <br>
-    <!-- 商品を選択するプルダウンメニュー -->
+    <!-- 商品選択のプルダウンメニュー -->
     <label for="document-type">商品を選択してください:</label>
     <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
         <option value="consent-color">同意説明書（カラー）</option>
@@ -500,18 +522,25 @@
         <option value="participation-card">参加カード</option>
     </select>
 
-    <!-- onchange="toggleCopyOptions()": 商品を選択したときに、JavaScript関数toggleCopyOptionsを実行。 -->
-
-    <!-- ★★★★★　数量と本文の入力フィールド START -->
-    <br><br>
-    <label for="quantity">数量:</label>
-    <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br> 
-
-    <div id="content-field">  <!-- 本文フィールドを div で囲む -->
-        <label for="content">本文:</label>
-        <input type="number" id="content" name="content" min="2" step="2" required><label>頁</label><br><br><br>
+    <!-- 2穴不要のチェックボックス -->
+    <div id="no-holes-option" style="display: none;">
+        <input type="checkbox" id="no-holes" name="no_holes">
+        <label for="no-holes">2穴不要</label>
     </div>
-    <!-- 参加カードの種類選択 -->
+
+    <!-- 数量フィールドを追加 -->
+    <div id="quantity-field">
+        <label for="quantity">数量:</label>
+        <input type="number" id="quantity" name="quantity" min="1" required>
+    </div>
+
+    <!-- 本文フィールド -->
+    <div id="content-field">
+        <label for="content">本文:</label>
+        <input type="number" id="content" name="content" min="2" step="2" required><label>頁</label>
+    </div>
+
+    <!-- 参加カード種類フィールド -->
     <div id="card-type-field" style="display: none;">
         <label for="sanka-card-type">参加カードの種類:</label>
         <select id="sanka-card-type" name="sanka_card_type">
@@ -519,36 +548,11 @@
             {% for card_type in participation_cards %}
                 <option value="{{ card_type }}">{{ card_type }}</option>
             {% endfor %}
-        </select><br><br>
+        </select>
     </div>
 
-    <script>
-        // 既存のtoggleCopyOptions関数を拡張
-        const oldToggleCopyOptions = toggleCopyOptions;
-        toggleCopyOptions = function() {
-            oldToggleCopyOptions();
-            
-            var selectedProduct = document.getElementById("document-type").value;
-            var cardTypeField = document.getElementById("card-type-field");
-            
-            if (selectedProduct === "participation-card") {
-                cardTypeField.style.display = "block";
-            } else {
-                cardTypeField.style.display = "none";
-            }
-        }
-    </script>
-    <!--
-    ・type="number": 数値専用の入力欄。
-    ・id="quantity"とid="content": JavaScriptでこれらの値を取得するための識別子。
-    ・min="1": 数量は1以上で入力する制限。
-    ・step="1"：増減±1。
-    ・required: 入力必須フィールド。 -->
-
-    <!-- ★★★★★　数量と本文の入力フィールド END　　★★★★★-->
-
-    <!-- ★★★★★　複写オプションの設定（テーブル）　START　★★★★★-->
-    <div id="copy-options">
+    <!-- 複写オプション -->
+    <div id="copy-options" style="display: none;">
         <h2>複写オプション</h2>
         <table class="copy-options-table">
             <tr>
@@ -644,8 +648,6 @@
                 <td></td>
             </tr>
         </table>
-        <!-- ★★★★★　複写オプションの設定（テーブル）　END 　★★★★★-->
-
         <br>
         <label for="fukusha5">複写オプション:</label>
         <select id="fukusha5" name="fukusha5" onchange="displayAdditionalCharge()">

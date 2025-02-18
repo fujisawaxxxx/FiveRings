@@ -270,11 +270,29 @@
                     return;
                 }
 
+                // 同意説明書の場合の総頁数計算
+                if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
+                    // 複写オプションの頁数を取得
+                    var fukusha1Pages = parseInt(document.getElementById("fukusha1-label").innerText) || 0;
+                    var fukusha2Pages = parseInt(document.getElementById("fukusha2-label").innerText) || 0;
+                    var fukusha3Pages = parseInt(document.getElementById("fukusha3-label").innerText) || 0;
+                    var fukusha4Pages = parseInt(document.getElementById("fukusha4-label").innerText) || 0;
+                    var atsugami2Pages = parseInt(document.getElementById("atsugami2-label").innerText) || 0;
+                    var atsugami3Pages = parseInt(document.getElementById("atsugami3-label").innerText) || 0;
+
+                    // 総頁数を計算
+                    var totalPages = content + fukusha1Pages + fukusha2Pages + fukusha3Pages + 
+                                   fukusha4Pages + atsugami2Pages + atsugami3Pages;
+                    
+                    // 総頁数を表示
+                    document.getElementById("total-pages-result").innerText = "総頁数: " + totalPages;
+                }
+
                 // 商品別に異なるAPIエンドポイントを設定
                 if (selectedProduct === "consent-color") {
-                    apiUrl = `/items/api/agree-color/?content=${content}`;
+                    apiUrl = `/items/api/agree-color/?content=${totalPages}`;  // contentをtotalPagesに変更
                 } else if (selectedProduct === "consent-monochrome") {
-                    apiUrl = `/items/api/agree-monochrome/?content=${content}`;
+                    apiUrl = `/items/api/agree-monochrome/?content=${totalPages}`;  // contentをtotalPagesに変更
                 } else if (selectedProduct === "case-card") {
                     apiUrl = `/items/api/casecard-price/?content=${content}`;
                 } else if (selectedProduct === "chiken-plan") {

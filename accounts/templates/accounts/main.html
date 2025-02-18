@@ -372,15 +372,70 @@
             const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
             const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
 
-            // 追加データを取得
+            // 複写オプションの日本語表記への変換
+            function getFukusha1Text(value) {
+                const options = {
+                    'fukusha1-0': '複写なし',
+                    'fukusha1-1': '2枚4頁',
+                    'fukusha1-2': '3枚6頁（基本）',
+                    'fukusha1-3': '4枚8頁',
+                    'fukusha1-4': '5枚10頁'
+                };
+                return options[value] || value;
+            }
+
+            function getFukusha2Text(value) {
+                const options = {
+                    'fukusha2-0': '複写なし',
+                    'fukusha2-1': '2枚4頁',
+                    'fukusha2-2': '3枚6頁',
+                    'fukusha2-3': '4枚8頁',
+                    'fukusha2-4': '5枚10頁'
+                };
+                return options[value] || value;
+            }
+
+            function getFukusha3Text(value) {
+                const options = {
+                    'fukusha3-0': '複写なし',
+                    'fukusha3-1': '2枚4頁',
+                    'fukusha3-2': '3枚6頁',
+                    'fukusha3-3': '4枚8頁',
+                    'fukusha3-4': '5枚10頁'
+                };
+                return options[value] || value;
+            }
+
+            function getFukusha4Text(value) {
+                const options = {
+                    'fukusha_no-0': 'なし',
+                    'fukusha_no-1': '1枚2頁',
+                    'fukusha_no-2': '2枚4頁',
+                    'fukusha_no-3': '3枚6頁'
+                };
+                return options[value] || value;
+            }
+
+            function getFukusha5Text(value) {
+                const options = {
+                    'fukusha_add_price-0': 'オプションなし',
+                    'fukusha_add_price-1': 'カラー3枚複写',
+                    'fukusha_add_price-2': 'カラー2枚複写',
+                    'fukusha_add_price-3': '両面3枚複写',
+                    'fukusha_add_price-4': '両面2枚複写'
+                };
+                return options[value] || value;
+            }
+
+            // 追加データを取得（複写オプションは日本語表記に変換）
             const invoiceDetail = document.getElementById("invoice-detail").value || "-";
             const uploadFileName = document.getElementById("selected-filename").innerText || "-";
             const sankaCardType = document.getElementById("sanka-card-type").value || "-";
-            const fukusha1 = document.getElementById("fukusha1").value || "-";
-            const fukusha2 = document.getElementById("fukusha2").value || "-";
-            const fukusha3 = document.getElementById("fukusha3").value || "-";
-            const fukusha4 = document.getElementById("fukusha4").value || "-";
-            const fukusha5 = document.getElementById("fukusha5").value || "-";
+            const fukusha1 = getFukusha1Text(document.getElementById("fukusha1").value) || "-";
+            const fukusha2 = getFukusha2Text(document.getElementById("fukusha2").value) || "-";
+            const fukusha3 = getFukusha3Text(document.getElementById("fukusha3").value) || "-";
+            const fukusha4 = getFukusha4Text(document.getElementById("fukusha4").value) || "-";
+            const fukusha5 = getFukusha5Text(document.getElementById("fukusha5").value) || "-";
             const totalPages = document.getElementById("total-pages-result").innerText.replace("総頁数: ", "") || "-";
             const additionalPrint = document.getElementById("additional-print").checked;
             const remarks = document.getElementById("remarks").value || "-";

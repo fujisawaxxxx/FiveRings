@@ -389,7 +389,21 @@
         <input type="text" id="invoice-detail" name="invoice_detail" style="width: 300px;">
     </div>
     <br>
+    <!-- 入稿ファイルアップロード -->
+    <div class="form-group">
+        <label for="upload-file">入稿ファイル：</label>
+        <input type="file" id="upload-file" name="upload_file" accept=".pdf,.doc,.docx" style="display: none;">
+        <button type="button" onclick="document.getElementById('upload-file').click()">ファイルを選択</button>
+        <span id="selected-filename"></span>
+    </div>
 
+    <script>
+        document.getElementById('upload-file').addEventListener('change', function(e) {
+            var filename = e.target.files[0] ? e.target.files[0].name : '';
+            document.getElementById('selected-filename').textContent = filename;
+        });
+    </script>
+    <br>
     <!-- 商品を選択するプルダウンメニュー -->
     <label for="document-type">商品を選択してください:</label>
     <select id="document-type" name="document_type" onchange="toggleCopyOptions()">

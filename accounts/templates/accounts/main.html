@@ -232,44 +232,56 @@
         // 見積もり計算ボタンの動作
         function calculateEstimate() {
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
-            var content = parseFloat(document.getElementById("content").value) || 0;
             var selectedProduct = document.getElementById("document-type").value;
+            
+            console.log("Selected Product:", selectedProduct);
+            console.log("Quantity:", quantity);
 
-            // 数量または本文が0の場合
-            if (quantity === 0 || content === 0) {
-                document.getElementById("estimate-result").innerText = "数量または本文が未入力です。";
-                document.getElementById("estimate-tnk").innerText = ""; // 単価をクリア
-                document.getElementById("discount-message").innerText = ""; // 割引メッセージをクリア
-                document.getElementById("total-pages-result").innerText = "総頁数: -"; // 総頁数をクリア
-                return; // 計算処理を中断
-            }
-
-            // 各複写オプションページ数と厚紙オプションページ数を取得
-            var fukusha1Page = parseInt(document.getElementById("fukusha1-label").innerText.replace("", "")) || 0;
-            var fukusha2Page = parseInt(document.getElementById("fukusha2-label").innerText.replace("", "")) || 0;
-            var fukusha3Page = parseInt(document.getElementById("fukusha3-label").innerText.replace("", "")) || 0;
-            var fukusha4Page = parseInt(document.getElementById("fukusha4-label").innerText.replace("", "")) || 0;
-            var atsugami2Page = parseInt(document.getElementById("atsugami2-label").innerText.replace("", "")) || 0;
-            var atsugami3Page = parseInt(document.getElementById("atsugami3-label").innerText.replace("", "")) || 0;
-
-            // 総頁数の計算（本文頁数 + 各複写頁数 + 各厚紙頁数）
-            var totalPages = content + fukusha1Page + fukusha2Page + fukusha3Page + fukusha4Page + atsugami2Page + atsugami3Page;
-            document.getElementById("total-pages-result").innerText = "総頁数: " + totalPages;
-
-            // 商品別に異なるAPIエンドポイントを設定
             let apiUrl;
-            if (selectedProduct === "consent-color") {
-                apiUrl = `/items/api/agree-color/?content=${totalPages}`;
-            } else if (selectedProduct === "consent-monochrome") {
-                apiUrl = `/items/api/agree-monochrome/?content=${totalPages}`;
-            } else if (selectedProduct === "case-card") {
-                apiUrl = `/items/api/casecard-price/?content=${content}`;
-            } else if (selectedProduct === "chiken-plan") {
-                apiUrl = `/items/api/chiken-plan-price/?content=${content}`;
-            } else if (selectedProduct === "medication-diary") {
-                apiUrl = `/items/api/medication-diary-price/?content=${content}`;
-            } else if (selectedProduct === "participation-card") {
-                apiUrl = `/items/api/participation-card/?card_type=${cardType}`;
+
+            // 参加カードの場合
+            if (selectedProduct === "participation-card") {
+                console.log("Processing participation-card");
+                if (quantity === 0) {
+                    document.getElementById("estimate-result").innerText = "数量が未入力です。";
+                    document.getElementById("estimate-tnk").innerText = ""; 
+                    return;
+                }
+                // 参加カードの種類を取得
+                const cardType = document.getElementById("sanka-card-type").value;
+                console.log("Card Type:", cardType);
+                if (!cardType) {
+                    document.getElementById("estimate-result").innerText = "参加カードの種類を選択してください。";
+                    document.getElementById("estimate-tnk").innerText = "";
+                    return;
+                }
+                // APIリクエストのURLを設定
+                apiUrl = `/items/api/participation-card/?card_type=${encodeURIComponent(cardType)}`;
+                console.log("API URL:", apiUrl);
+            } 
+            // 他の商品の場合
+            else {
+                var content = parseFloat(document.getElementById("content").value) || 0;
+                if (quantity === 0 || content === 0) {
+                    document.getElementById("estimate-result").innerText = "数量または本文が未入力です。";
+                    document.getElementById("estimate-tnk").innerText = "";
+                    document.getElementById("discount-message").innerText = "";
+                    document.getElementById("total-pages-result").innerText = "総頁数: -";
+                    return;
+                }
+
+                // 商品別に異なるAPIエンドポイントを設定
+                if (selectedProduct === "consent-color") {
+                    apiUrl = `/items/api/agree-color/?content=${content}`;
+                } else if (selectedProduct === "consent-monochrome") {
+                    apiUrl = `/items/api/agree-monochrome/?content=${content}`;
+                } else if (selectedProduct === "case-card") {
+                    apiUrl = `/items/api/casecard-price/?content=${content}`;
+                } else if (selectedProduct === "chiken-plan") {
+                    apiUrl = `/items/api/chiken-plan-price/?content=${content}`;
+                } else if (selectedProduct === "medication-diary") {
+                    apiUrl = `/items/api/medication-diary-price/?content=${content}`;
+                }
             }
 
             // 追加料金を取得

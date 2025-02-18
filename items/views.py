@@ -88,3 +88,14 @@ def get_participation_card_price(request):
             return JsonResponse({'error': '参加カードが見つかりません'}, status=404)
     else:
         return JsonResponse({'error': '参加カードのパラメーターが不正です'}, status=400)
+
+def participation_card_price(request):
+    card_type = request.GET.get('card_type')
+    try:
+        # cardtypeが完全一致するレコードを検索
+        card = ParticipationCard.objects.get(cardtype=card_type)
+        return JsonResponse({
+            'unit_price': str(card.unit_price)
+        })
+    except ParticipationCard.DoesNotExist:
+        return JsonResponse({'error': 'Card type not found'}, status=404)

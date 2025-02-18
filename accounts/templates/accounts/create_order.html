@@ -57,23 +57,23 @@
         </tr>
         <tr>
             <td>複写1</td>
-            <td>{{ fukusha1 }}</td>
+            <td>{% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}{{ fukusha1 }}{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>複写2</td>
-            <td>{{ fukusha2 }}</td>
+            <td>{% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}{{ fukusha2 }}{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>複写3</td>
-            <td>{{ fukusha3 }}</td>
+            <td>{% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}{{ fukusha3 }}{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>複写なしミシン目</td>
-            <td>{{ fukusha4 }}</td>
+            <td>{% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}{{ fukusha4 }}{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>複写オプション</td>
-            <td>{{ fukusha5 }}</td>
+            <td>{% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}{{ fukusha5 }}{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>総頁数</td>
@@ -93,7 +93,7 @@
         </tr>
         <tr>
             <td>2穴不要</td>
-            <td>{% if no_holes == 'true' %}はい{% else %}いいえ{% endif %}</td>
+            <td>{% if no_holes == 'true' %}〇{% else %}-{% endif %}</td>
         </tr>
         <tr>
             <td>備考</td>

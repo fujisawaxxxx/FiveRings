@@ -362,6 +362,12 @@
                                 document.getElementById("discount-message").innerText = ""; // メッセージをクリア
                             }
 
+                            // 2穴不要のチェックがONの場合、単価を10円減らす
+                            if (selectedProduct === "case-card" && document.getElementById("no-holes").checked) {
+                                unitPrice -= 10;
+                                document.getElementById("discount-message").innerText += " 2穴不要：10円引き";
+                            }
+
                             // 追加料金を単価に加算
                             unitPrice += additionalCharge;
 

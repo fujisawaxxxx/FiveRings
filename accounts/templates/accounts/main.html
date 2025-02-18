@@ -382,10 +382,15 @@
     </script>
 </head>
 <body>
-    <h1>メイン画面</h1>
-    <p>ログイン成功！</p>
+    <h3>見積もり作成画面</h3>
+    <!-- 詳細請求書名の入力フィールドを追加 -->
+    <div class="form-group">
+        <label for="invoice-detail">詳細請求書名：</label>
+        <input type="text" id="invoice-detail" name="invoice_detail" style="width: 300px;">
+    </div>
+    <br>
 
-    <!-- ★★★★★　商品を選択するプルダウンメニュー　START　★★★★★-->
+    <!-- 商品を選択するプルダウンメニュー -->
     <label for="document-type">商品を選択してください:</label>
     <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
         <option value="consent-color">同意説明書（カラー）</option>
@@ -397,12 +402,9 @@
     </select>
 
     <!-- onchange="toggleCopyOptions()": 商品を選択したときに、JavaScript関数toggleCopyOptionsを実行。 -->
-    <!-- ★★★★★　商品を選択するプルダウンメニュー END　　★★★★★-->
-
-
 
     <!-- ★★★★★　数量と本文の入力フィールド START -->
-    <h2>数量と本文</h2>
+    <br><br>
     <label for="quantity">数量:</label>
     <input type="number" id="quantity" name="quantity" min="1" step="1" required><label>部</label><br><br> 
 
@@ -565,7 +567,20 @@
     
     <p id="estimate-result">見積もり金額: - 円</p>
     <p id="estimate-tnk">単価: - 円</p>
+
+    <!-- 追加（増刷）のチェックボックス -->
+    <div class="form-group">
+        <input type="checkbox" id="additional-print" name="additional_print">
+        <label for="additional-print">追加（増刷）</label>
+    </div>
+
+    <!-- 備考の入力フィールド -->
+    <div class="form-group">
+        <label for="remarks">備考：</label>
+        <input type="text" id="remarks" name="remarks" style="width: 300px;">
+    </div>
     <br>
+
     <button type="button" onclick="order_create()">注文書作成</button>
     <br><br>
 </body>

@@ -365,15 +365,45 @@
 
 
         function order_create() {
-            // 必要なデータを取得
+            // 基本データを取得
             const productType = document.getElementById("document-type").value;
             const quantity = document.getElementById("quantity").value || "-";
             const content = document.getElementById("content").value || "-";
             const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
             const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
 
+            // 追加データを取得
+            const invoiceDetail = document.getElementById("invoice-detail").value || "-";
+            const uploadFileName = document.getElementById("selected-filename").innerText || "-";
+            const sankaCardType = document.getElementById("sanka-card-type").value || "-";
+            const fukusha1 = document.getElementById("fukusha1").value || "-";
+            const fukusha2 = document.getElementById("fukusha2").value || "-";
+            const fukusha3 = document.getElementById("fukusha3").value || "-";
+            const fukusha4 = document.getElementById("fukusha4").value || "-";
+            const fukusha5 = document.getElementById("fukusha5").value || "-";
+            const totalPages = document.getElementById("total-pages-result").innerText.replace("総頁数: ", "") || "-";
+            const additionalPrint = document.getElementById("additional-print").checked;
+            const remarks = document.getElementById("remarks").value || "-";
+
             // URLにデータを渡して遷移
-            const url = `{% url 'create_order' %}?product_type=${encodeURIComponent(productType)}&quantity=${encodeURIComponent(quantity)}&content=${encodeURIComponent(content)}&unit_price=${encodeURIComponent(unitPrice)}&estimate_result=${encodeURIComponent(estimateResult)}`;
+            const url = `{% url 'create_order' %}?` + 
+                `product_type=${encodeURIComponent(productType)}` +
+                `&quantity=${encodeURIComponent(quantity)}` +
+                `&content=${encodeURIComponent(content)}` +
+                `&unit_price=${encodeURIComponent(unitPrice)}` +
+                `&estimate_result=${encodeURIComponent(estimateResult)}` +
+                `&invoice_detail=${encodeURIComponent(invoiceDetail)}` +
+                `&upload_file=${encodeURIComponent(uploadFileName)}` +
+                `&sanka_card_type=${encodeURIComponent(sankaCardType)}` +
+                `&fukusha1=${encodeURIComponent(fukusha1)}` +
+                `&fukusha2=${encodeURIComponent(fukusha2)}` +
+                `&fukusha3=${encodeURIComponent(fukusha3)}` +
+                `&fukusha4=${encodeURIComponent(fukusha4)}` +
+                `&fukusha5=${encodeURIComponent(fukusha5)}` +
+                `&total_pages=${encodeURIComponent(totalPages)}` +
+                `&additional_print=${encodeURIComponent(additionalPrint)}` +
+                `&remarks=${encodeURIComponent(remarks)}`;
+
             window.location.href = url;
         }
 

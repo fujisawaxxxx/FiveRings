@@ -13,21 +13,26 @@ def main_view(request):
     }
     return render(request, 'accounts/main.html', context)
 
-@login_required  # 注文書作成画面へのビュー
+@login_required
 def create_order_view(request):
-    # 入力データをリクエストから取得
-    product_type = request.GET.get('product_type', '選択されていません')
-    quantity = request.GET.get('quantity', '-')
-    content = request.GET.get('content', '-')
-    unit_price = request.GET.get('unit_price', '-')
-    estimate_result = request.GET.get('estimate_result', '-')
-
+    # 全てのデータをリクエストから取得
     context = {
-        'product_type': product_type,
-        'quantity': quantity,
-        'content': content,
-        'unit_price': unit_price,
-        'estimate_result': estimate_result,
+        'product_type': request.GET.get('product_type', '選択されていません'),
+        'quantity': request.GET.get('quantity', '-'),
+        'content': request.GET.get('content', '-'),
+        'unit_price': request.GET.get('unit_price', '-'),
+        'estimate_result': request.GET.get('estimate_result', '-'),
+        'invoice_detail': request.GET.get('invoice_detail', '-'),
+        'upload_file': request.GET.get('upload_file', '-'),
+        'sanka_card_type': request.GET.get('sanka_card_type', '-'),
+        'fukusha1': request.GET.get('fukusha1', '-'),
+        'fukusha2': request.GET.get('fukusha2', '-'),
+        'fukusha3': request.GET.get('fukusha3', '-'),
+        'fukusha4': request.GET.get('fukusha4', '-'),
+        'fukusha5': request.GET.get('fukusha5', '-'),
+        'total_pages': request.GET.get('total_pages', '-'),
+        'additional_print': request.GET.get('additional_print', 'false'),
+        'remarks': request.GET.get('remarks', '-'),
     }
 
     return render(request, 'accounts/create_order.html', context)

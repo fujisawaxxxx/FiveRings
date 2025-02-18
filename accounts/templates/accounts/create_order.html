@@ -36,6 +36,14 @@
             <td>{{ product_type }}</td>
         </tr>
         <tr>
+            <td>詳細請求書名</td>
+            <td>{{ invoice_detail }}</td>
+        </tr>
+        <tr>
+            <td>入稿ファイル名</td>
+            <td>{{ upload_file }}</td>
+        </tr>
+        <tr>
             <td>数量</td>
             <td>{{ quantity }}</td>
         </tr>
@@ -44,12 +52,48 @@
             <td>{{ content }}</td>
         </tr>
         <tr>
+            <td>参加カードの種類</td>
+            <td>{{ sanka_card_type }}</td>
+        </tr>
+        <tr>
+            <td>複写1</td>
+            <td>{{ fukusha1 }}</td>
+        </tr>
+        <tr>
+            <td>複写2</td>
+            <td>{{ fukusha2 }}</td>
+        </tr>
+        <tr>
+            <td>複写3</td>
+            <td>{{ fukusha3 }}</td>
+        </tr>
+        <tr>
+            <td>複写なしミシン目</td>
+            <td>{{ fukusha4 }}</td>
+        </tr>
+        <tr>
+            <td>複写オプション</td>
+            <td>{{ fukusha5 }}</td>
+        </tr>
+        <tr>
+            <td>総頁数</td>
+            <td>{{ total_pages }}</td>
+        </tr>
+        <tr>
             <td>単価</td>
             <td>{{ unit_price }} 円</td>
         </tr>
         <tr>
             <td>見積もり金額</td>
             <td>{{ estimate_result }} 円</td>
+        </tr>
+        <tr>
+            <td>追加（増刷）</td>
+            <td>{% if additional_print == 'true' %}はい{% else %}いいえ{% endif %}</td>
+        </tr>
+        <tr>
+            <td>備考</td>
+            <td>{{ remarks }}</td>
         </tr>
     </table>
     <br><br>

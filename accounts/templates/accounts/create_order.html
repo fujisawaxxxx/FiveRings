@@ -107,7 +107,10 @@
         </tr>
     </table>
     <br><br>
-    <button type="button" onclick="send_mail_create_pdf()">発注依頼</button><br>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" onclick="return confirm('この内容で発注を確定しますか？')">発注依頼</button>
+    </form>
     <button type="button" onclick="back_main()">戻る</button>
 </body>
 </html>

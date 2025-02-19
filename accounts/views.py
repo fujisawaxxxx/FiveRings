@@ -17,10 +17,10 @@ def main_view(request):
 
 @login_required
 def create_order_view(request):
-    if request.method == 'POST':  # 発注依頼ボタンが押された場合
+    if request.method == 'POST':
         try:
-            # OrderHistoryモデルにデータを保存
             order = OrderHistory.objects.create(
+                staff=request.user,
                 product_type=request.GET.get('product_type', ''),
                 invoice_detail=request.GET.get('invoice_detail', ''),
                 upload_file=request.GET.get('upload_file', ''),
@@ -39,12 +39,32 @@ def create_order_view(request):
                 no_holes=request.GET.get('no_holes', 'false') == 'true',
                 remarks=request.GET.get('remarks', '')
             )
-            messages.success(request, f'注文番号 {order.order_number} で発注が完了しました。')
-            return redirect('main')  # メイン画面にリダイレクト
+            # 同じページを表示し直し、メッセージと共に全データを保持
+            context = {
+                'success_message': f'注文番号 {order.order_number} で発注が完了しました。',
+                'product_type': request.GET.get('product_type', '選択されていません'),
+                'quantity': request.GET.get('quantity', '-'),
+                'content': request.GET.get('content', '-'),
+                'unit_price': request.GET.get('unit_price', '-'),
+                'estimate_result': request.GET.get('estimate_result', '-'),
+                'invoice_detail': request.GET.get('invoice_detail', '-'),
+                'upload_file': request.GET.get('upload_file', '-'),
+                'sanka_card_type': request.GET.get('sanka_card_type', '-'),
+                'fukusha1': request.GET.get('fukusha1', '-'),
+                'fukusha2': request.GET.get('fukusha2', '-'),
+                'fukusha3': request.GET.get('fukusha3', '-'),
+                'fukusha4': request.GET.get('fukusha4', '-'),
+                'fukusha5': request.GET.get('fukusha5', '-'),
+                'total_pages': request.GET.get('total_pages', '-'),
+                'additional_print': request.GET.get('additional_print', 'false'),
+                'no_holes': request.GET.get('no_holes', 'false'),
+                'remarks': request.GET.get('remarks', '-'),
+            }
+            return render(request, 'accounts/create_order.html', context)
         except Exception as e:
             messages.error(request, f'発注処理中にエラーが発生しました: {str(e)}')
-            
-    # GETリクエストの場合は通常の処理
+    
+    # 通常の表示処理
     context = {
         'product_type': request.GET.get('product_type', '選択されていません'),
         'quantity': request.GET.get('quantity', '-'),
@@ -64,5 +84,4 @@ def create_order_view(request):
         'no_holes': request.GET.get('no_holes', 'false'),
         'remarks': request.GET.get('remarks', '-'),
     }
-
     return render(request, 'accounts/create_order.html', context)

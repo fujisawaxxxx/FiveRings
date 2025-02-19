@@ -492,6 +492,14 @@
 
 
         window.onload = toggleCopyOptions;
+
+        // レスポンスヘッダーから成功メッセージを取得して表示
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderSuccess = "{{ request.META.HTTP_X_ORDER_SUCCESS|escapejs }}";
+            if (orderSuccess) {
+                alert(orderSuccess);
+            }
+        });
     </script>
 </head>
 <body>

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User  # Userモデルをインポート
 
 class OrderHistory(models.Model):
     # 注文番号（5桁、ユニーク）
@@ -8,6 +9,16 @@ class OrderHistory(models.Model):
         unique=True,
         verbose_name="注文番号",
         editable=False  # 管理画面での編集を防止
+    )
+
+    # 担当者（ユーザーID）を追加
+    staff = models.ForeignKey(
+        User,
+        on_delete=models.PROTECT,  # ユーザーが削除されても注文履歴は残す
+        verbose_name="担当者",
+        related_name='order_histories',
+        null=True,  # nullを許可
+        blank=True  # 空白を許可
     )
 
     # 商品基本情報

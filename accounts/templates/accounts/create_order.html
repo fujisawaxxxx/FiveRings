@@ -17,6 +17,17 @@
         th {
             background-color: #f2f2f2;
         }
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
     <script>
         function back_main() {
@@ -26,6 +37,13 @@
 </head>
 <body>
     <h1>注文書作成</h1>
+
+    {% if success_message %}
+    <div class="success-message">
+        {{ success_message }}
+    </div>
+    {% endif %}
+
     <table>
         <tr>
             <th>項目</th>

@@ -46,6 +46,19 @@ def create_order_view(request):
             # 管理者のメールアドレスを取得
             admin_email = User.objects.get(username='admin').email
 
+            # 商品種類の日本語変換用の辞書
+            product_type_dict = {
+                'consent-color': '同意説明書（カラー）',
+                'consent-monochrome': '同意説明書（モノクロ）',
+                'case-card': 'ケースカード（症例報告書）',
+                'chiken-plan': '治験実施計画書',
+                'medication-diary': '服薬日誌',
+                'participation-card': '参加カード'
+            }
+
+            # 商品種類を日本語に変換
+            product_type_ja = product_type_dict.get(order.product_type, order.product_type)
+
             # メール本文を作成
             mail_body = f"""
 新しい注文が入りました。
@@ -53,7 +66,7 @@ def create_order_view(request):
 注文番号: {order.order_number}
 担当者: {order.staff}
 作成日時: {order.created_at}
-商品種類: {order.product_type}
+商品種類: {product_type_ja} 
 請求先: {order.invoice_detail}
 アップロードファイル: {order.upload_file}
 数量: {order.quantity}
@@ -71,12 +84,12 @@ def create_order_view(request):
 穴なし: {'あり' if order.no_holes else 'なし'}
 備考: {order.remarks}
 
-管理画面URL: http://サイトのドメイン/admin/order_rireki/orderhistory/{order.id}/
+管理画面URL: http://127.0.0.1:8000/admin/order_rireki/orderhistory/{order.id}/
             """
 
             # メール送信
             send_mail(
-                subject=f'新規注文通知 - 注文番号: {order.order_number}',
+                subject=f'ファイブリングス新規注文通知 - 注文番号: {order.order_number}',
                 message=mail_body,
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[admin_email],

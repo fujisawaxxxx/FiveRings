@@ -59,33 +59,44 @@ def create_order_view(request):
             # 商品種類を日本語に変換
             product_type_ja = product_type_dict.get(order.product_type, order.product_type)
 
+            # 同意説明書の場合のみ複写関連の情報を表示
+            if order.product_type in ['consent-color', 'consent-monochrome']:
+                copy_info = f"""
+            複写1: {order.fukusha1}
+            複写2: {order.fukusha2}
+            複写3: {order.fukusha3}
+            複写なしミシン目: {order.fukusha4}
+            複写オプション: {order.fukusha5}"""
+            else:
+                copy_info = """
+            複写1: -
+            複写2: -
+            複写3: -
+            複写なしミシン目: -
+            複写オプション: -"""
+
             # メール本文を作成
             mail_body = f"""
-新しい注文が入りました。
+            新しい注文が入りました。
 
-注文番号: {order.order_number}
-担当者: {order.staff}
-作成日時: {order.created_at}
-商品種類: {product_type_ja} 
-請求先: {order.invoice_detail}
-アップロードファイル: {order.upload_file}
-数量: {order.quantity}
-内容: {order.content}
-参加カード種類: {order.sanka_card_type}
-複写1: {order.fukusha1}
-複写2: {order.fukusha2}
-複写3: {order.fukusha3}
-複写4: {order.fukusha4}
-複写5: {order.fukusha5}
-総ページ数: {order.total_pages}
-単価: {order.unit_price}
-見積金額: {order.estimate_result}
-追加印刷: {'あり' if order.additional_print else 'なし'}
-穴なし: {'あり' if order.no_holes else 'なし'}
-備考: {order.remarks}
+            注文番号: {order.order_number}
+            担当者: {order.staff}
+            作成日時: {order.created_at}
+            商品種類: {product_type_ja}
+            請求先: {order.invoice_detail}
+            アップロードファイル: {order.upload_file}
+            数量: {order.quantity}
+            本文: {order.content}頁
+            参加カード種類: {order.sanka_card_type}{copy_info}
+            総ページ数: {order.total_pages}頁
+            単価: {order.unit_price}円
+            見積金額: {order.estimate_result}円
+            追加（増刷）: {'あり' if order.additional_print else '-'}
+            二穴: {'不要' if order.no_holes else '-'}
+            備考: {order.remarks}
 
-管理画面URL: http://127.0.0.1:8000/admin/order_rireki/orderhistory/{order.id}/
-            """
+            管理画面URL: http://サイトのドメイン/admin/order_rireki/orderhistory/{order.id}/
+                        """
 
             # メール送信
             send_mail(
@@ -94,7 +105,7 @@ def create_order_view(request):
                 from_email=settings.EMAIL_HOST_USER,
                 recipient_list=[admin_email],
                 fail_silently=False,
-            )
+            )   
 
             # 既存の処理を継続
             context = {

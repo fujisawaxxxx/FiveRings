@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from items.models import ParticipationCard  # 追加
 from order_rireki.models import OrderHistory  # 追加
 from django.contrib import messages  # 追加
+from django.core.mail import send_mail
+from django.contrib.auth.models import User
+from django.conf import settings
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -39,7 +42,48 @@ def create_order_view(request):
                 no_holes=request.GET.get('no_holes', 'false') == 'true',
                 remarks=request.GET.get('remarks', '')
             )
-            # 同じページを表示し直し、メッセージと共に全データを保持
+
+            # 管理者のメールアドレスを取得
+            admin_email = User.objects.get(username='admin').email
+
+            # メール本文を作成
+            mail_body = f"""
+新しい注文が入りました。
+
+注文番号: {order.order_number}
+担当者: {order.staff}
+作成日時: {order.created_at}
+商品種類: {order.product_type}
+請求先: {order.invoice_detail}
+アップロードファイル: {order.upload_file}
+数量: {order.quantity}
+内容: {order.content}
+参加カード種類: {order.sanka_card_type}
+複写1: {order.fukusha1}
+複写2: {order.fukusha2}
+複写3: {order.fukusha3}
+複写4: {order.fukusha4}
+複写5: {order.fukusha5}
+総ページ数: {order.total_pages}
+単価: {order.unit_price}
+見積金額: {order.estimate_result}
+追加印刷: {'あり' if order.additional_print else 'なし'}
+穴なし: {'あり' if order.no_holes else 'なし'}
+備考: {order.remarks}
+
+管理画面URL: http://サイトのドメイン/admin/order_rireki/orderhistory/{order.id}/
+            """
+
+            # メール送信
+            send_mail(
+                subject=f'新規注文通知 - 注文番号: {order.order_number}',
+                message=mail_body,
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[admin_email],
+                fail_silently=False,
+            )
+
+            # 既存の処理を継続
             context = {
                 'success_message': f'注文番号 {order.order_number} で発注が完了しました。',
                 'product_type': request.GET.get('product_type', '選択されていません'),

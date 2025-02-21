@@ -103,79 +103,67 @@ def create_order_view(request):
             複写なしミシン目: -
             複写オプション: -"""
 
-            # メール本文を作成
-            mail_body = f"""
-            新しい注文が入りました。
+            # メール本文用の項目を準備（値が'-'の場合はNoneを設定）
+            mail_items = {
+                '注文番号': order.order_number,
+                '担当者': order.staff,
+                '作成日時': order.created_at,
+                '商品種類': product_type_ja,
+                '詳細請求書名': order.invoice_detail if order.invoice_detail != '-' else None,
+                'アップロードファイル': order.upload_file if order.upload_file != '-' else None,
+                '数量': order.quantity,
+                '本文': f"{order.content}頁" if order.content != '-' else None,
+                '参加カード種類': order.sanka_card_type if order.sanka_card_type != '-' else None,
+                '複写1': order.fukusha1 if order.fukusha1 != '-' else None,
+                '複写2': order.fukusha2 if order.fukusha2 != '-' else None,
+                '複写3': order.fukusha3 if order.fukusha3 != '-' else None,
+                '複写なしミシン目': order.fukusha4 if order.fukusha4 != '-' else None,
+                '複写オプション': order.fukusha5 if order.fukusha5 != '-' else None,
+                '総ページ数': f"{order.total_pages}頁" if order.total_pages != '-' else None,
+                '単価': f"{order.unit_price}円",
+                '見積金額': f"{order.estimate_result}円",
+                '追加（増刷）': 'あり' if order.additional_print else None,
+                '２穴': '不要' if order.no_holes else None,
+                '備考': order.remarks if order.remarks != '-' else None,
+            }
 
-            注文番号: {order.order_number}
-            担当者: {order.staff}
-            作成日時: {order.created_at}
-            商品種類: {product_type_ja}
-            詳細請求書名　: {order.invoice_detail}
-            アップロードファイル: {order.upload_file}
-            数量: {order.quantity}
-            本文: {order.content}頁
-            参加カード種類: {order.sanka_card_type}{copy_info}
-            総ページ数: {order.total_pages}頁
-            単価: {order.unit_price}円
-            見積金額: {order.estimate_result}円
-            追加（増刷）: {'あり' if order.additional_print else '-'}
-            ２穴: {'不要' if order.no_holes else '-'}
-            備考: {order.remarks}
+            # 管理者向けメール本文の作成
+            admin_mail_body = "新しい注文が入りました。\n\n"
+            for key, value in mail_items.items():
+                if value is not None:  # 値が None でない場合のみ追加
+                    admin_mail_body += f"{key}: {value}\n"
+            
+            admin_mail_body += f"\n管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/"
 
-            管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/
-                        """
-
-            # EmailMessageオブジェクトを作成
+            # 管理者へのメール送信
             email = EmailMessage(
                 subject=f'ファイブリングス新規注文通知 - 注文番号: {order.order_number}',
-                body=mail_body,
+                body=admin_mail_body,
                 from_email=settings.EMAIL_HOST_USER,
                 to=[admin_email],
             )
 
             # アップロードされたファイルを添付
-            if order.upload_file:
+            if order.upload_file and order.upload_file != '-':
                 file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', order.upload_file)
                 if os.path.exists(file_path):
                     with open(file_path, 'rb') as f:
                         email.attach(order.upload_file, f.read(), 'application/octet-stream')
 
-            # メール送信
             email.send(fail_silently=False)
 
-            # ユーザーへのメール本文を作成
-            user_mail_body = f"""
-            {request.user.username} 様
-
-            注文番号: {order.order_number}
-            担当者: {order.staff}
-            作成日時: {order.created_at}
-            商品種類: {product_type_ja}
-            詳細請求書名　: {order.invoice_detail}
-            アップロードファイル: {order.upload_file}
-            数量: {order.quantity}
-            本文: {order.content}頁
-            参加カード種類: {order.sanka_card_type}
-            複写1: {order.fukusha1}
-            複写2: {order.fukusha2}
-            複写3: {order.fukusha3}
-            複写なしミシン目: {order.fukusha4}
-            複写オプション: {order.fukusha5}
-            総ページ数: {order.total_pages}頁
-            単価: {order.unit_price}円
-            見積金額: {order.estimate_result}円
-            追加（増刷）: {'あり' if order.additional_print else '-'}
-            ２穴: {'不要' if order.no_holes else '-'}
-            備考: {order.remarks}
-            """
+            # ユーザー向けメール本文の作成
+            user_mail_body = f"{request.user.username} 様\n\n"
+            for key, value in mail_items.items():
+                if value is not None:  # 値が None でない場合のみ追加
+                    user_mail_body += f"{key}: {value}\n"
 
             # ユーザーへのメール送信
             user_email = EmailMessage(
                 subject=f'【注文受付完了 {order.order_number}】ご注文ありがとうございます',
                 body=user_mail_body,
                 from_email=settings.EMAIL_HOST_USER,
-                to=[request.user.email],  # ログインユーザーのメールアドレス
+                to=[request.user.email],
             )
             user_email.send(fail_silently=False)
 

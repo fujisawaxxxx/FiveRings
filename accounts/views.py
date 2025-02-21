@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from items.models import ParticipationCard  # 追加
 from order_rireki.models import OrderHistory  # 追加
 from django.contrib import messages  # 追加
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 from django.contrib.auth.models import User
 from django.conf import settings
 import os
@@ -126,14 +126,23 @@ def create_order_view(request):
             管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/
                         """
 
-            # メール送信
-            send_mail(
+            # EmailMessageオブジェクトを作成
+            email = EmailMessage(
                 subject=f'ファイブリングス新規注文通知 - 注文番号: {order.order_number}',
-                message=mail_body,
+                body=mail_body,
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[admin_email],
-                fail_silently=False,
-            )   
+                to=[admin_email],
+            )
+
+            # アップロードされたファイルを添付
+            if order.upload_file:
+                file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', order.upload_file)
+                if os.path.exists(file_path):
+                    with open(file_path, 'rb') as f:
+                        email.attach(order.upload_file, f.read(), 'application/octet-stream')
+
+            # メール送信
+            email.send(fail_silently=False)
 
             # 既存の処理を継続
             context = {

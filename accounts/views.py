@@ -120,7 +120,7 @@ def create_order_view(request):
             単価: {order.unit_price}円
             見積金額: {order.estimate_result}円
             追加（増刷）: {'あり' if order.additional_print else '-'}
-            二穴: {'不要' if order.no_holes else '-'}
+            ２穴: {'不要' if order.no_holes else '-'}
             備考: {order.remarks}
 
             管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/
@@ -143,6 +143,41 @@ def create_order_view(request):
 
             # メール送信
             email.send(fail_silently=False)
+
+            # ユーザーへのメール本文を作成
+            user_mail_body = f"""
+            {request.user.username} 様
+
+            注文番号: {order.order_number}
+            担当者: {order.staff}
+            作成日時: {order.created_at}
+            商品種類: {product_type_ja}
+            詳細請求書名　: {order.invoice_detail}
+            アップロードファイル: {order.upload_file}
+            数量: {order.quantity}
+            本文: {order.content}頁
+            参加カード種類: {order.sanka_card_type}
+            複写1: {order.fukusha1}
+            複写2: {order.fukusha2}
+            複写3: {order.fukusha3}
+            複写なしミシン目: {order.fukusha4}
+            複写オプション: {order.fukusha5}
+            総ページ数: {order.total_pages}頁
+            単価: {order.unit_price}円
+            見積金額: {order.estimate_result}円
+            追加（増刷）: {'あり' if order.additional_print else '-'}
+            ２穴: {'不要' if order.no_holes else '-'}
+            備考: {order.remarks}
+            """
+
+            # ユーザーへのメール送信
+            user_email = EmailMessage(
+                subject=f'【注文受付完了 {order.order_number}】ご注文ありがとうございます',
+                body=user_mail_body,
+                from_email=settings.EMAIL_HOST_USER,
+                to=[request.user.email],  # ログインユーザーのメールアドレス
+            )
+            user_email.send(fail_silently=False)
 
             # 既存の処理を継続
             context = {

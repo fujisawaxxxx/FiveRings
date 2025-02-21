@@ -22,19 +22,44 @@ def main_view(request):
 def create_order_view(request):
     if request.method == 'POST':
         try:
+            # 商品種類を取得
+            product_type = request.GET.get('product_type', '')
+            
+            # 同意説明書の場合とそれ以外で分岐
+            if product_type in ['consent-color', 'consent-monochrome']:
+                # 同意説明書の場合は通常通りの値を使用
+                fukusha_values = {
+                    'fukusha1': request.GET.get('fukusha1', ''),
+                    'fukusha2': request.GET.get('fukusha2', ''),
+                    'fukusha3': request.GET.get('fukusha3', ''),
+                    'fukusha4': request.GET.get('fukusha4', ''),
+                    'fukusha5': request.GET.get('fukusha5', ''),
+                }
+            else:
+                # 同意説明書以外の場合は全て'-'を設定
+                fukusha_values = {
+                    'fukusha1': '-',
+                    'fukusha2': '-',
+                    'fukusha3': '-',
+                    'fukusha4': '-',
+                    'fukusha5': '-',
+                }
+
+            # OrderHistoryオブジェクトの作成
             order = OrderHistory.objects.create(
                 staff=request.user,
-                product_type=request.GET.get('product_type', ''),
+                product_type=product_type,
                 invoice_detail=request.GET.get('invoice_detail', ''),
                 upload_file=request.GET.get('upload_file', ''),
                 quantity=int(request.GET.get('quantity', 0)),
                 content=request.GET.get('content', ''),
                 sanka_card_type=request.GET.get('sanka_card_type', ''),
-                fukusha1=request.GET.get('fukusha1', ''),
-                fukusha2=request.GET.get('fukusha2', ''),
-                fukusha3=request.GET.get('fukusha3', ''),
-                fukusha4=request.GET.get('fukusha4', ''),
-                fukusha5=request.GET.get('fukusha5', ''),
+                # 複写関連の値を設定
+                fukusha1=fukusha_values['fukusha1'],
+                fukusha2=fukusha_values['fukusha2'],
+                fukusha3=fukusha_values['fukusha3'],
+                fukusha4=fukusha_values['fukusha4'],
+                fukusha5=fukusha_values['fukusha5'],
                 total_pages=request.GET.get('total_pages', ''),
                 unit_price=int(request.GET.get('unit_price', 0)),
                 estimate_result=int(request.GET.get('estimate_result', 0)),
@@ -83,7 +108,7 @@ def create_order_view(request):
             担当者: {order.staff}
             作成日時: {order.created_at}
             商品種類: {product_type_ja}
-            請求先: {order.invoice_detail}
+            詳細請求書名　: {order.invoice_detail}
             アップロードファイル: {order.upload_file}
             数量: {order.quantity}
             本文: {order.content}頁
@@ -95,7 +120,7 @@ def create_order_view(request):
             二穴: {'不要' if order.no_holes else '-'}
             備考: {order.remarks}
 
-            管理画面URL: http://サイトのドメイン/admin/order_rireki/orderhistory/{order.id}/
+            管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/
                         """
 
             # メール送信

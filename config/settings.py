@@ -136,3 +136,7 @@ EMAIL_PORT = 587  # TLSポート
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'gcp01@ag-media.co.jp'
 EMAIL_HOST_PASSWORD = 'nueykebjxcwerbht'  # アプリパスワードを設定する必要があります
+
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

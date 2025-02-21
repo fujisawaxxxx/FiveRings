@@ -7,6 +7,9 @@ from django.contrib import messages  # 追加
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.conf import settings
+import os
+from datetime import datetime
+from django.http import JsonResponse
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -178,3 +181,30 @@ def create_order_view(request):
         'remarks': request.GET.get('remarks', '-'),
     }
     return render(request, 'accounts/create_order.html', context)
+
+@login_required
+def upload_file(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        uploaded_file = request.FILES['file']
+        
+        # ファイル名とタイムスタンプを結合
+        filename, ext = os.path.splitext(uploaded_file.name)
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        new_filename = f"{filename}_{timestamp}{ext}"
+        
+        # アップロード先のパスを作成
+        upload_dir = os.path.join(settings.MEDIA_ROOT, 'uploads')
+        os.makedirs(upload_dir, exist_ok=True)
+        
+        # ファイルを保存
+        file_path = os.path.join(upload_dir, new_filename)
+        with open(file_path, 'wb+') as destination:
+            for chunk in uploaded_file.chunks():
+                destination.write(chunk)
+        
+        return JsonResponse({
+            'success': True,
+            'filename': new_filename
+        })
+    
+    return JsonResponse({'success': False}, status=400)

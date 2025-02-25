@@ -107,7 +107,6 @@ def create_order_view(request):
             mail_items = {
                 '注文番号': order.order_number,
                 '担当者': order.staff,
-                '作成日時': order.created_at,
                 '商品種類': product_type_ja,
                 '詳細請求書名': order.invoice_detail if order.invoice_detail != '-' else None,
                 'アップロードファイル': order.upload_file if order.upload_file != '-' else None,

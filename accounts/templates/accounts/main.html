@@ -24,6 +24,16 @@
         #estimate-tnk {
             font-size: 10px; /* 文字サイズを10pxに設定 */
         }
+        /* 商品説明ボックスのスタイル */
+        .product-description-box {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #333;
+        }
     </style>
 
     <script>
@@ -37,8 +47,12 @@
             var noHolesOption = document.getElementById("no-holes-option");
             var cardTypeField = document.getElementById("card-type-field");
             var quantityField = document.getElementById("quantity-field");
+            var productDescription = document.getElementById("product-description");
 
             console.log("Selected Product:", selectedProduct); // デバッグ用
+
+            // 商品説明を更新
+            updateProductDescription(selectedProduct);
 
             // 2穴不要オプションの表示/非表示を制御
             if (noHolesOption) {
@@ -531,6 +545,45 @@
                 }
             });
         }
+
+        // 商品説明を更新する関数（新規追加）
+        function updateProductDescription(productType) {
+            var descriptionElement = document.getElementById("product-description");
+            var description = "";
+            
+            switch(productType) {
+                case "consent-color":
+                case "consent-monochrome":
+                    description = "【複写頁をカラー印刷：3枚複写1セット毎→70円増　2枚複写1セット毎→45円増】<br>" +
+                                "【複写頁を両面印刷：3枚複写1セット毎→55円増　2枚複写1セット毎→35円増】<br>" +
+                                "【複写頁がなしの場合：50円減】<br>" + 
+                                "共通仕様：A4　 無線綴じ(くるみ製本)　ミシン線加工あり<br>" + 
+                                "表紙・上質70.5kg　本文・上質44.5kg　複写用紙#50　厚紙・上質70.5kg　同意撤回書・上質44.5kg　　<br>" + 
+                                "※基本セットして複写頁3枚(=6頁)が1セット付属いたします(全体頁数には加算されません)<br>" + 
+                                "※複写頁が基本セットより増減する場合は、それに併せて全体頁数も増減します(1枚=2頁)<br>" +
+                                "※厚紙(仕切り紙)・同意撤回書を付属する場合は、それに併せて全体頁数も増加します(1枚=2頁)";
+                    break;
+                case "case-card":
+                    description = "仕様：A4　両面モノクロ<br>上質110kg<br>中綴じ・2穴加工あり<br>2穴不要の場合は10円減<br>※90頁を越える場合は要相談";
+                    break;
+                case "chiken-plan":
+                    description = "仕様：A4　両面モノクロ<br>表紙・上質110kg<br>本文・上質70kg<br>無線綴じ(くるみ製本)";
+                    break;
+                case "medication-diary":
+                    description = "仕様：A5　両面カラー<br>上質110kg<br>中綴じ";
+                    break;
+                default:
+                    description = "";
+            }
+            
+            descriptionElement.innerHTML = description;
+        }
+        
+        // DOMが読み込まれたら初期表示を設定
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初期表示時に商品説明を更新
+            updateProductDescription(document.getElementById("document-type").value);
+        });
     </script>
 </head>
 <body>
@@ -589,6 +642,9 @@
         <option value="medication-diary">服薬日誌</option>
         <option value="participation-card">参加カード</option>
     </select>
+
+    <!-- 商品説明ラベル（新規追加） -->
+    <div id="product-description" class="product-description-box"></div>
 
     <!-- 2穴不要のチェックボックス -->
     <div id="no-holes-option" style="display: none;">

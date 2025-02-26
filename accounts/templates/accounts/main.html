@@ -501,33 +501,36 @@
             }
         });
 
-        document.getElementById('upload-file').addEventListener('change', async function(e) {
-            if (!e.target.files.length) return;
-            
-            const file = e.target.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            try {
-                const response = await fetch('{% url "upload_file" %}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    }
-                });
+        const element = document.getElementById('upload-file');
+        if (element) {
+            element.addEventListener('change', async function(e) {
+                if (!e.target.files.length) return;
                 
-                const data = await response.json();
-                if (data.success) {
-                    document.getElementById('selected-filename').textContent = data.filename;
-                } else {
+                const file = e.target.files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                try {
+                    const response = await fetch('{% url "upload_file" %}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    if (data.success) {
+                        document.getElementById('selected-filename').textContent = data.filename;
+                    } else {
+                        alert('ファイルのアップロードに失敗しました。');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
                     alert('ファイルのアップロードに失敗しました。');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('ファイルのアップロードに失敗しました。');
-            }
-        });
+            });
+        }
     </script>
 </head>
 <body>

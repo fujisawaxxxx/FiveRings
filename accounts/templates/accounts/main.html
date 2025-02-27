@@ -546,6 +546,19 @@
                 if (!e.target.files.length) return;
                 
                 const file = e.target.files[0];
+                // ファイルサイズチェック (20MB = 20 * 1024 * 1024 bytes)
+                if (file.size > 20 * 1024 * 1024) {
+                    alert('ファイルサイズが大きすぎます。20MB以下のファイルを選択してください。');
+                    // 選択をクリア
+                    e.target.value = '';
+                    document.getElementById('selected-filename').textContent = '';
+                    document.getElementById('upload-status').textContent = '';
+                    return;
+                }
+                
+                // アップロード中の表示
+                document.getElementById('upload-status').textContent = 'アップロード中...';
+                
                 const formData = new FormData();
                 formData.append('file', file);
                 
@@ -561,12 +574,15 @@
                     const data = await response.json();
                     if (data.success) {
                         document.getElementById('selected-filename').textContent = data.filename;
+                        document.getElementById('upload-status').textContent = 'アップロード完了';
                     } else {
                         alert('ファイルのアップロードに失敗しました。');
+                        document.getElementById('upload-status').textContent = 'アップロード失敗';
                     }
                 } catch (error) {
                     console.error('Error:', error);
                     alert('ファイルのアップロードに失敗しました。');
+                    document.getElementById('upload-status').textContent = 'アップロード失敗';
                 }
             });
         }
@@ -628,6 +644,7 @@
         <input type="file" id="upload-file" name="file" accept="*/*" style="display: none;">
         <button type="button" onclick="document.getElementById('upload-file').click()">ファイルを選択</button>
         <span id="selected-filename"></span>
+        <span id="upload-status" style="color: green; margin-left: 10px;"></span>
     </div>
 
     <script>
@@ -635,6 +652,19 @@
             if (!e.target.files.length) return;
             
             const file = e.target.files[0];
+            // ファイルサイズチェック (20MB = 20 * 1024 * 1024 bytes)
+            if (file.size > 20 * 1024 * 1024) {
+                alert('ファイルサイズが大きすぎます。20MB以下のファイルを選択してください。');
+                // 選択をクリア
+                e.target.value = '';
+                document.getElementById('selected-filename').textContent = '';
+                document.getElementById('upload-status').textContent = '';
+                return;
+            }
+            
+            // アップロード中の表示
+            document.getElementById('upload-status').textContent = 'アップロード中...';
+            
             const formData = new FormData();
             formData.append('file', file);
             
@@ -650,12 +680,15 @@
                 const data = await response.json();
                 if (data.success) {
                     document.getElementById('selected-filename').textContent = data.filename;
+                    document.getElementById('upload-status').textContent = 'アップロード完了';
                 } else {
                     alert('ファイルのアップロードに失敗しました。');
+                    document.getElementById('upload-status').textContent = 'アップロード失敗';
                 }
             } catch (error) {
                 console.error('Error:', error);
                 alert('ファイルのアップロードに失敗しました。');
+                document.getElementById('upload-status').textContent = 'アップロード失敗';
             }
         });
     </script>

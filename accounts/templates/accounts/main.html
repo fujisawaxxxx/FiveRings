@@ -506,6 +506,9 @@
             // 2穴不要の状態を取得
             const noHoles = document.getElementById("no-holes")?.checked || false;
 
+            // アップロードファイル関連の情報を取得
+            const uploadFileTimestamped = document.getElementById("upload-file-timestamped").value || "-";
+
             // URLにデータを渡して遷移
             const url = `{% url 'create_order' %}?` + 
                 `product_type=${encodeURIComponent(productType)}` +
@@ -515,6 +518,7 @@
                 `&estimate_result=${encodeURIComponent(estimateResult)}` +
                 `&invoice_detail=${encodeURIComponent(invoiceDetail)}` +
                 `&upload_file=${encodeURIComponent(uploadFileName)}` +
+                `&upload_file_timestamped=${encodeURIComponent(uploadFileTimestamped)}` +
                 `&sanka_card_type=${encodeURIComponent(sankaCardType)}` +
                 `&fukusha1=${encodeURIComponent(fukusha1)}` +
                 `&fukusha2=${encodeURIComponent(fukusha2)}` +
@@ -573,7 +577,10 @@
                     
                     const data = await response.json();
                     if (data.success) {
-                        document.getElementById('selected-filename').textContent = data.filename;
+                        // オリジナルのファイル名を表示
+                        document.getElementById('selected-filename').textContent = data.original_filename;
+                        // タイムスタンプ付きのファイル名を隠しフィールドに保存
+                        document.getElementById('upload-file-timestamped').value = data.timestamped_filename;
                         document.getElementById('upload-status').textContent = 'アップロード完了';
                     } else {
                         alert('ファイルのアップロードに失敗しました。');
@@ -647,6 +654,9 @@
         <span id="upload-status" style="color: green; margin-left: 10px;"></span>
     </div>
 
+    <!-- タイムスタンプ付きファイル名を保存する隠しフィールドを追加 -->
+    <input type="hidden" id="upload-file-timestamped" name="upload_file_timestamped">
+
     <script>
         document.getElementById('upload-file').addEventListener('change', async function(e) {
             if (!e.target.files.length) return;
@@ -679,7 +689,10 @@
                 
                 const data = await response.json();
                 if (data.success) {
-                    document.getElementById('selected-filename').textContent = data.filename;
+                    // オリジナルのファイル名を表示
+                    document.getElementById('selected-filename').textContent = data.original_filename;
+                    // タイムスタンプ付きのファイル名を隠しフィールドに保存
+                    document.getElementById('upload-file-timestamped').value = data.timestamped_filename;
                     document.getElementById('upload-status').textContent = 'アップロード完了';
                 } else {
                     alert('ファイルのアップロードに失敗しました。');
@@ -879,7 +892,7 @@
     <br><br>
     
     <!-- ログアウトボタンとクリアボタンを追加 -->
-    <button type="button" onclick="window.location.href='/accounts/logout/'">ログアウト</button>
+    <button type="button" onclick="window.location.href='/accounts/login/'">ログアウト</button>
     <button type="button" onclick="window.location.reload()">クリア</button>
     <br><br>
 </body>

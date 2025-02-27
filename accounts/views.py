@@ -10,6 +10,9 @@ from django.conf import settings
 import os
 from datetime import datetime
 from django.http import JsonResponse
+from django.core.files.storage import FileSystemStorage
+import time
+from django.utils import timezone
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -48,12 +51,18 @@ def create_order_view(request):
                     'fukusha5': '-',
                 }
 
+            # アップロードファイル情報を取得
+            upload_file = request.GET.get('upload_file', '')
+            # タイムスタンプ付きのファイル名を取得
+            upload_file_timestamped = request.GET.get('upload_file_timestamped', '')
+
             # OrderHistoryオブジェクトの作成
             order = OrderHistory.objects.create(
                 staff=request.user,
                 product_type=product_type,
                 invoice_detail=request.GET.get('invoice_detail', ''),
-                upload_file=request.GET.get('upload_file', ''),
+                upload_file=upload_file,
+                upload_file_timestamped=upload_file_timestamped,  # タイムスタンプ付きファイル名を保存
                 quantity=int(request.GET.get('quantity', 0)),
                 content=request.GET.get('content', ''),
                 sanka_card_type=request.GET.get('sanka_card_type', ''),
@@ -145,7 +154,7 @@ def create_order_view(request):
 
             # アップロードされたファイルを添付
             if order.upload_file and order.upload_file != '-':
-                file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', order.upload_file)
+                file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', order.upload_file_timestamped)
                 if os.path.exists(file_path):
                     with open(file_path, 'rb') as f:
                         email.attach(order.upload_file, f.read(), 'application/octet-stream')
@@ -219,27 +228,31 @@ def upload_file(request):
     if request.method == 'POST' and request.FILES.get('file'):
         uploaded_file = request.FILES['file']
         
-        # ファイル名とタイムスタンプを結合
-        filename, ext = os.path.splitext(uploaded_file.name)
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        new_filename = f"{filename}_{timestamp}{ext}"
+        # オリジナルのファイル名を保存
+        original_filename = uploaded_file.name
         
-        # アップロード先のパスを作成
-        upload_dir = os.path.join(settings.MEDIA_ROOT, 'uploads')
-        os.makedirs(upload_dir, exist_ok=True)
+        # ファイル名と拡張子を分離
+        filename, file_extension = os.path.splitext(original_filename)
         
-        # ファイルを保存
-        file_path = os.path.join(upload_dir, new_filename)
-        with open(file_path, 'wb+') as destination:
-            for chunk in uploaded_file.chunks():
-                destination.write(chunk)
+        # 現在の日時をyyyymmddhhmmss形式で取得
+        timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
         
+        # タイムスタンプ付きのファイル名を生成（保存用）
+        # 形式: 元のファイル名_yyyymmddhhmmss.拡張子
+        timestamped_filename = f"{filename}_{timestamp}{file_extension}"
+        
+        # uploads ディレクトリを指定してファイルを保存
+        fs = FileSystemStorage(location=os.path.join(settings.MEDIA_ROOT, 'uploads'))
+        saved_filename = fs.save(timestamped_filename, uploaded_file)
+        
+        # 成功レスポンスを返す（オリジナルのファイル名とタイムスタンプ付きファイル名の両方を含める）
         return JsonResponse({
-            'success': True,
-            'filename': new_filename
+            'success': True, 
+            'original_filename': original_filename,  # 表示用のオリジナルファイル名
+            'timestamped_filename': saved_filename,  # 保存用のタイムスタンプ付きファイル名
         })
     
-    return JsonResponse({'success': False}, status=400)
+    return JsonResponse({'success': False})
 
 def get_product_type_display(product_type):
     product_types = {

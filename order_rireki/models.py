@@ -36,6 +36,7 @@ class OrderHistory(models.Model):
     product_type = models.CharField(max_length=50, choices=PRODUCT_CHOICES, verbose_name="商品の種類")
     invoice_detail = models.CharField(max_length=200, blank=True, null=True, verbose_name="詳細請求書名")
     upload_file = models.CharField(max_length=200, blank=True, null=True, verbose_name="入稿ファイル名")
+    
     quantity = models.IntegerField(verbose_name="数量")
     content = models.CharField(max_length=50, blank=True, null=True, verbose_name="本文")
     sanka_card_type = models.CharField(max_length=100, blank=True, null=True, verbose_name="参加カードの種類")
@@ -92,6 +93,13 @@ class OrderHistory(models.Model):
         verbose_name="納期",
         null=True,
         blank=True
+    )
+    # 入稿ファイル名(タイムスタンプ付)を追加
+    upload_file_timestamped = models.CharField(
+        max_length=255, 
+        blank=True, 
+        null=True, 
+        verbose_name="入稿ファイル名(タイムスタンプ付)"
     )
 
     def __str__(self):

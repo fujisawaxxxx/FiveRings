@@ -13,7 +13,8 @@ class OrderHistoryAdmin(admin.ModelAdmin):
         'invoice_detail',
         'quantity',
         'estimate_result',
-        'additional_print',
+        'yamato_number',  # ヤマト伝票番号を表示に追加
+        'delivery_date',  # 納期を表示に追加
     )
 
     list_filter = (
@@ -22,5 +23,6 @@ class OrderHistoryAdmin(admin.ModelAdmin):
         'created_at',
         'additional_print',
         'no_holes',
+        'delivery_date',  # 納期でフィルタリングできるように追加
     )
     # ... 他の設定 ...

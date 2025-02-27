@@ -3,6 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>ログイン</title>
+    <style>
+        .admin-button {
+            display: inline-block;
+            background-color: #417690;
+            color: white;
+            padding: 8px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        .admin-button:hover {
+            background-color: #205067;
+        }
+    </style>
 </head>
 <body>
     <h2>ログイン</h2>
@@ -11,5 +26,10 @@
         {{ form.as_p }}
         <button type="submit">ログイン</button>
     </form>
+    
+    <!-- 管理画面へのリンクボタン -->
+    <div>
+        <a href="/admin/" class="admin-button">管理画面へ</a>
+    </div>
 </body>
 </html>

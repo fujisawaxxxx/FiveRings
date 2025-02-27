@@ -21,21 +21,6 @@ class OrderHistory(models.Model):
         blank=True  # 空白を許可
     )
 
-    # ヤマトの伝票番号を追加
-    yamato_number = models.CharField(
-        max_length=20,
-        verbose_name="ヤマト伝票番号",
-        null=True,
-        blank=True
-    )
-    
-    # 納期を追加
-    delivery_date = models.DateField(
-        verbose_name="納期",
-        null=True,
-        blank=True
-    )
-
     # 商品基本情報
     PRODUCT_CHOICES = [
         ('consent-color', '同意説明書（カラー）'),
@@ -93,6 +78,21 @@ class OrderHistory(models.Model):
         verbose_name = "注文履歴"
         verbose_name_plural = "注文履歴"
         ordering = ['-created_at']
+    
+        # ヤマトの伝票番号を追加
+    yamato_number = models.CharField(
+        max_length=20,
+        verbose_name="ヤマト伝票番号",
+        null=True,
+        blank=True
+    )
+    
+    # 納期を追加
+    delivery_date = models.DateField(
+        verbose_name="納期",
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return f"#{self.order_number} - {self.get_product_type_display()} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"

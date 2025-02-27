@@ -81,7 +81,8 @@ def create_order_view(request):
                 'case-card': 'ケースカード（症例報告書）',
                 'chiken-plan': '治験実施計画書',
                 'medication-diary': '服薬日誌',
-                'participation-card': '参加カード'
+                'participation-card': '参加カード',
+                'generic': '汎用',  # 汎用商品タイプの表示名を追加
             }
 
             # 商品種類を日本語に変換
@@ -239,3 +240,15 @@ def upload_file(request):
         })
     
     return JsonResponse({'success': False}, status=400)
+
+def get_product_type_display(product_type):
+    product_types = {
+        'consent-color': '同意説明書（カラー）',
+        'consent-monochrome': '同意説明書（モノクロ）',
+        'case-card': 'ケースカード（症例報告書）',
+        'chiken-plan': '治験実施計画書',
+        'medication-diary': '服薬日誌',
+        'participation-card': '参加カード',
+        'generic': '汎用',  # 汎用商品タイプの表示名を追加
+    }
+    return product_types.get(product_type, product_type)

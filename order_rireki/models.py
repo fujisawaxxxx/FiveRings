@@ -29,6 +29,7 @@ class OrderHistory(models.Model):
         ('chiken-plan', '治験実施計画書'),
         ('medication-diary', '服薬日誌'),
         ('participation-card', '参加カード'),
+        ('generic', '汎用'),
     ]
     
     # create_order.htmlの表示順に合わせて定義

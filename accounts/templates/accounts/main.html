@@ -596,6 +596,9 @@
                 case "medication-diary":
                     description = "仕様：A5　両面カラー<br>上質110kg<br>中綴じ";
                     break;
+                case "generic":
+                    description = "詳細は全て備考に記入してください";
+                    break;
                 default:
                     description = "";
             }
@@ -831,9 +834,10 @@
     </div>
 
     <!-- 備考の入力フィールド -->
+    <br>
     <div class="form-group">
-        <label for="remarks">備考：</label>
-        <input type="text" id="remarks" name="remarks" style="width: 300px;">
+        <label for="remarks">備考：</label><br>
+        <textarea id="remarks" name="remarks" style="width: 300px; height: 100px;"></textarea>
     </div>
     <br>
 

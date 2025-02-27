@@ -414,7 +414,8 @@
                             document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
                             document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
                         } else {
-                            document.getElementById("estimate-result").innerText = "該当するデータが見つかりません。";
+                            document.getElementById("estimate-result").innerHTML = "該当する頁数が見つかりません。<br>" + 
+                                                                    "<span style='color: red;'>メールにて頁数を担当までご連絡ください。</span>";
                             document.getElementById("estimate-tnk").innerText = "";
                         }
                     })
@@ -597,7 +598,7 @@
                     description = "仕様：A5　両面カラー<br>上質110kg<br>中綴じ";
                     break;
                 case "generic":
-                    description = "詳細は全て備考に記入してください";
+                    description = "<span style='color: red;'>詳細は全て備考に記入してください</span>";
                     break;
                 default:
                     description = "";
@@ -837,7 +838,7 @@
     <br>
     <div class="form-group">
         <label for="remarks">備考：</label><br>
-        <textarea id="remarks" name="remarks" style="width: 300px; height: 100px;"></textarea>
+        <textarea id="remarks" name="remarks" style="width: 400px; height: 100px;"></textarea>
     </div>
     <br>
 

@@ -40,41 +40,48 @@
         //商品のプルダウン選択時
         function toggleCopyOptions() {
             var selectedProduct = document.getElementById("document-type").value;
-            
-            // 各要素の取得と存在チェック
             var copyOptions = document.getElementById("copy-options");
             var contentField = document.getElementById("content-field");
-            var noHolesOption = document.getElementById("no-holes-option");
             var cardTypeField = document.getElementById("card-type-field");
-            var quantityField = document.getElementById("quantity-field");
-            var productDescription = document.getElementById("product-description");
-
-            console.log("Selected Product:", selectedProduct); // デバッグ用
-
+            var noHolesOption = document.getElementById("no-holes-option");
+            var unitPriceField = document.getElementById("unit-price-field"); // 単価フィールド
+            
             // 商品説明を更新
             updateProductDescription(selectedProduct);
-
-            // 2穴不要オプションの表示/非表示を制御
-            if (noHolesOption) {
-                noHolesOption.style.display = selectedProduct === "case-card" ? "block" : "none";
+            
+            // 複写オプションの表示/非表示
+            if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
+                copyOptions.style.display = "block";
+            } else {
+                copyOptions.style.display = "none";
             }
-
-            // 複写オプションの表示/非表示を制御
-            if (copyOptions) {
-                copyOptions.style.display = 
-                    (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") 
-                    ? "block" : "none";
+            
+            // 本文フィールドの表示/非表示
+            if (selectedProduct === "participation-card" || selectedProduct === "generic") {
+                contentField.style.display = "none";
+            } else {
+                contentField.style.display = "block";
             }
-
-            // 本文フィールドと参加カード種類の表示/非表示を制御
-            if (contentField && cardTypeField) {
-                if (selectedProduct === "participation-card") {
-                    contentField.style.display = "none";
-                    cardTypeField.style.display = "block";
-                } else {
-                    contentField.style.display = "block";
-                    cardTypeField.style.display = "none";
-                }
+            
+            // 単価フィールドの表示/非表示
+            if (selectedProduct === "generic") {
+                unitPriceField.style.display = "block";
+            } else {
+                unitPriceField.style.display = "none";
+            }
+            
+            // 参加カード種類フィールドの表示/非表示
+            if (selectedProduct === "participation-card") {
+                cardTypeField.style.display = "block";
+            } else {
+                cardTypeField.style.display = "none";
+            }
+            
+            // 2穴不要オプションの表示/非表示（ケースカードの場合のみ表示）
+            if (selectedProduct === "case-card") {
+                noHolesOption.style.display = "block";
+            } else {
+                noHolesOption.style.display = "none";
             }
 
             // 見積もり金額をクリア
@@ -269,16 +276,42 @@
             console.log("Selected Product:", selectedProduct);
             console.log("Quantity:", quantity);
 
+            // 汎用商品タイプの場合
+            if (selectedProduct === "generic") {
+                if (quantity === 0) {
+                    document.getElementById("estimate-result").innerText = "数量が未入力です。";
+                    document.getElementById("estimate-tnk").innerText = "";
+                    return;
+                }
+                
+                var unitPrice = parseFloat(document.getElementById("unit-price").value) || 0;
+                if (unitPrice === 0) {
+                    document.getElementById("estimate-result").innerText = "単価が未入力です。";
+                    document.getElementById("estimate-tnk").innerText = "";
+                    return;
+                }
+                
+                // 見積もり金額の計算
+                var totalPrice = quantity * unitPrice;
+                document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
+                document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
+                return;
+            }
+
+            var content = parseFloat(document.getElementById("content").value) || 0;
+            if (quantity === 0 || (selectedProduct !== "participation-card" && content === 0)) {
+                document.getElementById("estimate-result").innerText = "数量または本文が未入力です。";
+                document.getElementById("estimate-tnk").innerText = "";
+                document.getElementById("discount-message").innerText = "";
+                document.getElementById("total-pages-result").innerText = "総頁数: -";
+                return;
+            }
+
             let apiUrl;
 
             // 参加カードの場合
             if (selectedProduct === "participation-card") {
                 console.log("Processing participation-card");
-                if (quantity === 0) {
-                    document.getElementById("estimate-result").innerText = "数量が未入力です。";
-                    document.getElementById("estimate-tnk").innerText = ""; 
-                    return;
-                }
                 // 参加カードの種類を取得
                 const cardType = document.getElementById("sanka-card-type").value;
                 console.log("Card Type:", cardType);
@@ -293,15 +326,6 @@
             } 
             // 他の商品の場合
             else {
-                var content = parseFloat(document.getElementById("content").value) || 0;
-                if (quantity === 0 || content === 0) {
-                    document.getElementById("estimate-result").innerText = "数量または本文が未入力です。";
-                    document.getElementById("estimate-tnk").innerText = "";
-                    document.getElementById("discount-message").innerText = "";
-                    document.getElementById("total-pages-result").innerText = "総頁数: -";
-                    return;
-                }
-
                 // 同意説明書の場合の総頁数計算
                 if (selectedProduct === "consent-color" || selectedProduct === "consent-monochrome") {
                     // 複写オプションの頁数を取得
@@ -641,6 +665,7 @@
         <option value="chiken-plan">治験実施計画書</option>
         <option value="medication-diary">服薬日誌</option>
         <option value="participation-card">参加カード</option>
+        <option value="generic">汎用</option>
     </select>
 
     <!-- 商品説明ラベル（新規追加） -->
@@ -662,6 +687,12 @@
     <div id="content-field">
         <label for="content">本文:</label>
         <input type="number" id="content" name="content" min="2" step="2" required><label>頁</label>
+    </div>
+
+    <!-- 単価フィールド（初期状態では非表示） -->
+    <div id="unit-price-field" style="display: none;">
+        <label for="unit-price">単価:</label>
+        <input type="number" id="unit-price" name="unit_price" min="1" required><label>円</label>
     </div>
 
     <!-- 参加カード種類フィールド -->

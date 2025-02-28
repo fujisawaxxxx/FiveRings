@@ -37,6 +37,130 @@
     </style>
 
     <script>
+        // 注文書作成ボタンを非表示にする関数
+        function hideOrderButton() {
+            console.log("hideOrderButton called");
+            document.getElementById("order-create-button").style.display = "none";
+        }
+        
+        // ページ読み込み時の初期化処理
+        window.onload = function() {
+            console.log("Window loaded");
+            
+            // 数量フィールドの変更を監視
+            var quantityInput = document.getElementById("quantity");
+            if (quantityInput) {
+                quantityInput.addEventListener("input", function() {
+                    console.log("Quantity changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 本文フィールドの変更を監視
+            var contentInput = document.getElementById("content");
+            if (contentInput) {
+                contentInput.addEventListener("input", function() {
+                    console.log("Content changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 単価フィールドの変更を監視
+            var unitPriceInput = document.getElementById("unit-price");
+            if (unitPriceInput) {
+                unitPriceInput.addEventListener("input", function() {
+                    console.log("Unit price changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 参加カード種類の変更を監視
+            var cardTypeSelect = document.getElementById("sanka-card-type");
+            if (cardTypeSelect) {
+                cardTypeSelect.addEventListener("change", function() {
+                    console.log("Card type changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 複写オプションの変更を監視
+            var fukusha1Select = document.getElementById("fukusha1");
+            if (fukusha1Select) {
+                fukusha1Select.addEventListener("change", function() {
+                    console.log("Fukusha1 changed");
+                    hideOrderButton();
+                });
+            }
+            
+            var fukusha2Select = document.getElementById("fukusha2");
+            if (fukusha2Select) {
+                fukusha2Select.addEventListener("change", function() {
+                    console.log("Fukusha2 changed");
+                    hideOrderButton();
+                });
+            }
+            
+            var fukusha3Select = document.getElementById("fukusha3");
+            if (fukusha3Select) {
+                fukusha3Select.addEventListener("change", function() {
+                    console.log("Fukusha3 changed");
+                    hideOrderButton();
+                });
+            }
+            
+            var fukusha4Select = document.getElementById("fukusha4");
+            if (fukusha4Select) {
+                fukusha4Select.addEventListener("change", function() {
+                    console.log("Fukusha4 changed");
+                    hideOrderButton();
+                });
+            }
+            
+            var fukusha5Select = document.getElementById("fukusha5");
+            if (fukusha5Select) {
+                fukusha5Select.addEventListener("change", function() {
+                    console.log("Fukusha5 changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 2穴不要オプションの変更を監視
+            var noHolesCheckbox = document.getElementById("no-holes");
+            if (noHolesCheckbox) {
+                noHolesCheckbox.addEventListener("change", function() {
+                    console.log("No holes changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 商品タイプの変更を監視
+            var documentTypeSelect = document.getElementById("document-type");
+            if (documentTypeSelect) {
+                documentTypeSelect.addEventListener("change", function() {
+                    console.log("Document type changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 追加（増刷）チェックボックスの変更を監視
+            var additionalPrintCheckbox = document.getElementById("additional-print");
+            if (additionalPrintCheckbox) {
+                additionalPrintCheckbox.addEventListener("change", function() {
+                    console.log("Additional print changed");
+                    hideOrderButton();
+                });
+            }
+            
+            // 備考欄の変更を監視
+            var remarksTextarea = document.getElementById("remarks");
+            if (remarksTextarea) {
+                remarksTextarea.addEventListener("input", function() {
+                    console.log("Remarks changed");
+                    hideOrderButton();
+                });
+            }
+        };
+        
         //商品のプルダウン選択時
         function toggleCopyOptions() {
             var selectedProduct = document.getElementById("document-type").value;
@@ -109,6 +233,9 @@
             document.getElementById("fukusha4-label").innerText = "-";
             document.getElementById("atsugami2-label").innerText = "-";
             document.getElementById("atsugami3-label").innerText = "-";
+
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
 
         // ★★★★★　　複写1のプルダウン選択時START　★★★★★
@@ -144,6 +271,8 @@
             }
             // 選択された値に応じて、ラベル（fukusha1-label）のブラウザ上のテキストを変更
 
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
         // ★★★★★　　複写1のプルダウン選択時END 　★★★★★
 
@@ -180,6 +309,9 @@
                     fukusya_page.innerText = "0";
                     atsugami_page.innerText = "0";
             }
+
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
         // ★★★★★　　複写2のプルダウン選択時END 　★★★★★
 
@@ -214,6 +346,9 @@
                     fukusya_page.innerText = "0";
                     atsugami_page.innerText = "0";
             }
+
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
         // ★★★★★　　複写3のプルダウン選択時END 　★★★★★
 
@@ -238,6 +373,9 @@
                 default:
                     fukusya_page.innerText = "0";
             }
+
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
         // ★★★★★　　複写なしミシン目のプルダウン選択時END 　★★★★★
 
@@ -264,6 +402,9 @@
             }
 
             document.getElementById("additional-charge-label").innerText = "追加料金: " + additionalCharge + " 円";
+
+            // 注文書作成ボタンを非表示にする
+            hideOrderButton();
         }
 
 
@@ -423,6 +564,12 @@
                         console.error("Fetch Error:", error);
                         document.getElementById("estimate-result").innerText = "エラーが発生しました。";
                     });
+            }
+
+            // 成功時に注文書作成ボタンを表示
+            var orderButton = document.getElementById("order-create-button");
+            if (orderButton) {
+                orderButton.style.display = "block";
             }
         }
 
@@ -888,7 +1035,8 @@
     </div>
     <br>
 
-    <button type="button" onclick="order_create()">注文書作成</button>
+    <!-- 注文書作成ボタン（初期状態では非表示） -->
+    <button type="button" id="order-create-button" onclick="order_create()" style="display: none;">注文書作成</button>
     <br><br>
     
     <!-- ログアウトボタンとクリアボタンを追加 -->

@@ -417,25 +417,25 @@
             console.log("Selected Product:", selectedProduct);
             console.log("Quantity:", quantity);
 
-            // 汎用商品タイプの場合
+            // 汎用商品の場合
             if (selectedProduct === "generic") {
-                if (quantity === 0) {
-                    document.getElementById("estimate-result").innerText = "数量が未入力です。";
-                    document.getElementById("estimate-tnk").innerText = "";
-                    return;
-                }
+                var unitPrice = document.getElementById("unit-price").value;
                 
-                var unitPrice = parseFloat(document.getElementById("unit-price").value) || 0;
-                if (unitPrice === 0) {
+                // 単価が入力されているか確認
+                if (!unitPrice) {
                     document.getElementById("estimate-result").innerText = "単価が未入力です。";
-                    document.getElementById("estimate-tnk").innerText = "";
                     return;
                 }
                 
-                // 見積もり金額の計算
-                var totalPrice = quantity * unitPrice;
+                // 単価と数量から合計金額を計算
+                var totalPrice = unitPrice * quantity;
+                
+                // 結果を表示
                 document.getElementById("estimate-result").innerText = "見積もり金額: " + totalPrice + "円";
                 document.getElementById("estimate-tnk").innerText = "単価: " + unitPrice + "円";
+                
+                // 注文書作成ボタンを表示
+                document.getElementById("order-create-button").style.display = "block";
                 return;
             }
 

@@ -199,6 +199,11 @@
                 cardTypeField.style.display = "block";
             } else {
                 cardTypeField.style.display = "none";
+                // 参加カード以外が選択された場合、参加カードの種類をリセット
+                var cardTypeSelect = document.getElementById("sanka-card-type");
+                if (cardTypeSelect) {
+                    cardTypeSelect.selectedIndex = 0; // 最初の選択肢に戻す
+                }
             }
             
             // 2穴不要オプションの表示/非表示（ケースカードの場合のみ表示）

@@ -84,7 +84,7 @@
             <td>{{ content }}</td>
         </tr>
         {% endif %}
-        {% if sanka_card_type != '-' %}
+        {% if product_type == 'participation-card' and sanka_card_type != '-' %}
         <tr>
             <td>参加カードの種類</td>
             <td>{{ sanka_card_type }}</td>

@@ -35,8 +35,9 @@
             background-color: #f8f9fa;
             border-left: 4px solid #0dcaf0;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 12px; /* 文字サイズを14pxから12pxに変更 */
             color: #333;
+            line-height: 1.3; /* 行間を狭くする */
         }
         /* フォーム要素のスタイル */
         .form-control:focus, .form-select:focus {
@@ -932,7 +933,6 @@
 
     <!-- 複写オプション -->
     <div id="copy-options" style="display: none;" class="mb-4">
-        <h2>複写オプション</h2>
         <table class="copy-options-table">
             <tr>
                 <!-- テーブルのヘッダー -->
@@ -1038,16 +1038,19 @@
         </select>
         <span id="additional-charge-label">追加料金: - 円</span>
 
-        <p id="total-pages-result">総頁数: -</p>
         <p id="discount-message"></p>
     </div>
 
-    <!-- 見積もり計算ボタン -->
-    <button type="button" onclick="calculateEstimate()" class="btn btn-info mb-3">見積もり計算</button>
-
-    <!-- 見積もり結果 -->
-    <p id="estimate-result" class="mb-1">見積もり金額: - 円</p>
-    <p id="estimate-tnk" class="mb-3">単価: - 円</p>
+    <!-- 見積もり計算ボタンと見積もり結果を横並びに表示 -->
+    <div class="d-flex align-items-center mb-3">
+        <!-- 見積もり計算ボタン -->
+        <button type="button" onclick="calculateEstimate()" class="btn btn-info me-3">見積もり計算</button>
+        
+        <!-- 見積もり結果 -->
+        <p id="estimate-result" class="mb-0 me-4">見積もり金額: - 円</p>
+        <p id="estimate-tnk" class="mb-0 me-4">単価: - 円</p>
+        <p id="total-pages-result" class="mb-0">総頁数: -</p>
+    </div>
 
     <!-- 追加（増刷）のチェックボックス -->
     <div class="form-check mb-3">

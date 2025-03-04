@@ -2,7 +2,11 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>メイン画面0013</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- テーブルのデザイン -->
     <style>
@@ -29,10 +33,25 @@
             margin: 10px 0;
             padding: 10px;
             background-color: #f8f9fa;
-            border-left: 4px solid #007bff;
+            border-left: 4px solid #0dcaf0;
             border-radius: 4px;
             font-size: 14px;
             color: #333;
+        }
+        /* フォーム要素のスタイル */
+        .form-control:focus, .form-select:focus {
+            border-color: #0dcaf0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+        }
+        .btn-info {
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #0bacce;
+            border-color: #0bacce;
+            color: white;
         }
     </style>
 
@@ -166,6 +185,7 @@
             var selectedProduct = document.getElementById("document-type").value;
             var copyOptions = document.getElementById("copy-options");
             var contentField = document.getElementById("content-field");
+            console.log("Content field element:", contentField);
             var cardTypeField = document.getElementById("card-type-field");
             var noHolesOption = document.getElementById("no-holes-option");
             var unitPriceField = document.getElementById("unit-price-field"); // 単価フィールド
@@ -182,9 +202,13 @@
             
             // 本文フィールドの表示/非表示
             if (selectedProduct === "participation-card" || selectedProduct === "generic") {
-                contentField.style.display = "none";
+                console.log("Hiding content field for:", selectedProduct);
+                contentField.classList.add("d-none");
+                contentField.classList.remove("d-flex");
             } else {
-                contentField.style.display = "block";
+                console.log("Showing content field for:", selectedProduct);
+                contentField.classList.remove("d-none");
+                contentField.classList.add("d-flex");
             }
             
             // 単価フィールドの表示/非表示
@@ -782,125 +806,123 @@
             descriptionElement.innerHTML = description;
         }
         
-        // DOMが読み込まれたら初期表示を設定
+        // DOMが読み込まれたら初期化処理を実行
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, initializing...");
             // 初期表示時に商品説明を更新
-            updateProductDescription(document.getElementById("document-type").value);
+            var selectedProduct = document.getElementById("document-type").value;
+            updateProductDescription(selectedProduct);
+            
+            // 初期表示時に本文フィールドの表示/非表示を設定
+            var contentField = document.getElementById("content-field");
+            if (contentField) {
+                if (selectedProduct === "participation-card" || selectedProduct === "generic") {
+                    contentField.classList.add("d-none");
+                    contentField.classList.remove("d-flex");
+                } else {
+                    contentField.classList.remove("d-none");
+                    contentField.classList.add("d-flex");
+                }
+            }
+            
+            // 初期表示時に複写オプションの表示/非表示を設定
+            toggleCopyOptions();
         });
     </script>
 </head>
-<body>
-    <h3>見積もり作成画面</h3>
-    <!-- 詳細請求書名の入力フィールドを追加 -->
-    <div class="form-group">
-        <label for="invoice-detail">詳細請求書名：</label>
-        <input type="text" id="invoice-detail" name="invoice_detail" style="width: 300px;">
-    </div>
-    <br>
-    <!-- 入稿ファイルアップロード -->
-    <div class="form-group">
-        <label for="upload-file">入稿ファイル：</label>
-        <input type="file" id="upload-file" name="file" accept="*/*" style="display: none;">
-        <button type="button" onclick="document.getElementById('upload-file').click()">ファイルを選択</button>
-        <span id="selected-filename"></span>
-        <span id="upload-status" style="color: green; margin-left: 10px;"></span>
+<body class="container py-4">
+    <h3 class="mb-4">見積もり作成画面</h3>
+    
+    <!-- 詳細請求書名と入稿ファイルを1行に配置 -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="d-flex align-items-center flex-wrap">
+                <!-- 詳細請求書名 -->
+                <div class="me-4 d-flex align-items-center">
+                    <label for="invoice-detail" class="form-label mb-0 me-2">詳細請求書名：</label>
+                    <input type="text" id="invoice-detail" name="invoice_detail" class="form-control" style="width: 300px; border-color: #0dcaf0;">
+                </div>
+                
+                <!-- 入稿ファイル -->
+                <div class="d-flex align-items-center">
+                    <label for="upload-file" class="form-label mb-0 me-2">入稿ファイル：</label>
+                    <input type="file" id="upload-file" name="file" accept="*/*" style="display: none;">
+                    <button type="button" onclick="document.getElementById('upload-file').click()" class="btn btn-info me-2">ファイルを選択</button>
+                    <span id="selected-filename"></span>
+                    <span id="upload-status" class="text-success ms-2"></span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- タイムスタンプ付きファイル名を保存する隠しフィールドを追加 -->
+    <!-- タイムスタンプ付きファイル名を保存する隠しフィールド -->
     <input type="hidden" id="upload-file-timestamped" name="upload_file_timestamped">
 
-    <script>
-        document.getElementById('upload-file').addEventListener('change', async function(e) {
-            if (!e.target.files.length) return;
-            
-            const file = e.target.files[0];
-            // ファイルサイズチェック (20MB = 20 * 1024 * 1024 bytes)
-            if (file.size > 20 * 1024 * 1024) {
-                alert('ファイルサイズが大きすぎます。20MB以下のファイルを選択してください。');
-                // 選択をクリア
-                e.target.value = '';
-                document.getElementById('selected-filename').textContent = '';
-                document.getElementById('upload-status').textContent = '';
-                return;
-            }
-            
-            // アップロード中の表示
-            document.getElementById('upload-status').textContent = 'アップロード中...';
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            try {
-                const response = await fetch('{% url "upload_file" %}', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    }
-                });
-                
-                const data = await response.json();
-                if (data.success) {
-                    // オリジナルのファイル名を表示
-                    document.getElementById('selected-filename').textContent = data.original_filename;
-                    // タイムスタンプ付きのファイル名を隠しフィールドに保存
-                    document.getElementById('upload-file-timestamped').value = data.timestamped_filename;
-                    document.getElementById('upload-status').textContent = 'アップロード完了';
-                } else {
-                    alert('ファイルのアップロードに失敗しました。');
-                    document.getElementById('upload-status').textContent = 'アップロード失敗';
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('ファイルのアップロードに失敗しました。');
-                document.getElementById('upload-status').textContent = 'アップロード失敗';
-            }
-        });
-    </script>
-    <br>
-    <!-- 商品選択のプルダウンメニュー -->
-    <label for="document-type">商品を選択してください:</label>
-    <select id="document-type" name="document_type" onchange="toggleCopyOptions()">
-        <option value="consent-color">同意説明書（カラー）</option>
-        <option value="consent-monochrome">同意説明書（モノクロ）</option>
-        <option value="case-card">ケースカード（症例報告書）</option>
-        <option value="chiken-plan">治験実施計画書</option>
-        <option value="medication-diary">服薬日誌</option>
-        <option value="participation-card">参加カード</option>
-        <option value="generic">汎用</option>
-    </select>
+    <!-- 商品選択と商品説明を横に配置 -->
+    <div class="row mb-3">
+        <div class="col-md-5">
+            <!-- 商品選択部分 -->
+            <div class="d-flex align-items-center">
+                <label for="document-type" class="form-label mb-0 me-2">商品を選択してください:</label>
+                <select id="document-type" name="document_type" onchange="toggleCopyOptions()" class="form-select" style="width: 300px; border-color: #0dcaf0;">
+                    <option value="consent-color">同意説明書（カラー）</option>
+                    <option value="consent-monochrome">同意説明書（モノクロ）</option>
+                    <option value="case-card">ケースカード（症例報告書）</option>
+                    <option value="chiken-plan">治験実施計画書</option>
+                    <option value="medication-diary">服薬日誌</option>
+                    <option value="participation-card">参加カード</option>
+                    <option value="generic">汎用</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <!-- 商品説明部分 -->
+            <div id="product-description" class="product-description-box"></div>
+        </div>
+    </div>
 
-    <!-- 商品説明ラベル（新規追加） -->
-    <div id="product-description" class="product-description-box"></div>
+    <!-- 数量と本文を1行に配置 -->
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="d-flex align-items-center">
+                <!-- 数量フィールド -->
+                <div class="me-4 d-flex align-items-center">
+                    <label for="quantity" class="form-label mb-0 me-2">数量:</label>
+                    <input type="number" id="quantity" name="quantity" min="1" required class="form-control" style="width: 100px; border-color: #0dcaf0;">
+                    <span class="ms-2">部</span>
+                </div>
+                
+                <!-- 本文フィールド - d-noneクラスを追加して初期状態を制御 -->
+                <div id="content-field" class="d-flex align-items-center">
+                    <label for="content" class="form-label mb-0 me-2">本文:</label>
+                    <input type="number" id="content" name="content" min="2" step="2" required class="form-control" style="width: 100px; border-color: #0dcaf0;">
+                    <span class="ms-2">頁</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 2穴不要のチェックボックス -->
-    <div id="no-holes-option" style="display: none;">
-        <input type="checkbox" id="no-holes" name="no_holes">
-        <label for="no-holes">2穴不要</label>
-    </div>
-
-    <!-- 数量フィールドを追加 -->
-    <div id="quantity-field">
-        <label for="quantity">数量:</label>
-        <input type="number" id="quantity" name="quantity" min="1" required>
-    </div>
-
-    <!-- 本文フィールド -->
-    <div id="content-field">
-        <label for="content">本文:</label>
-        <input type="number" id="content" name="content" min="2" step="2" required><label>頁</label>
+    <div id="no-holes-option" style="display: none;" class="mb-3">
+        <div class="form-check">
+            <input type="checkbox" id="no-holes" name="no_holes" class="form-check-input">
+            <label for="no-holes" class="form-check-label">2穴不要</label>
+        </div>
     </div>
 
     <!-- 単価フィールド（初期状態では非表示） -->
-    <div id="unit-price-field" style="display: none;">
-        <label for="unit-price">単価:</label>
-        <input type="number" id="unit-price" name="unit_price" min="1" required><label>円</label>
+    <div id="unit-price-field" style="display: none;" class="mb-3">
+        <label for="unit-price" class="form-label">単価:</label>
+        <div class="input-group" style="width: 150px;">
+            <input type="number" id="unit-price" name="unit_price" min="1" required class="form-control" style="border-color: #0dcaf0;">
+            <span class="input-group-text">円</span>
+        </div>
     </div>
 
     <!-- 参加カード種類フィールド -->
-    <div id="card-type-field" style="display: none;">
-        <label for="sanka-card-type">参加カードの種類:</label>
-        <select id="sanka-card-type" name="sanka_card_type">
+    <div id="card-type-field" style="display: none;" class="mb-3">
+        <label for="sanka-card-type" class="form-label">参加カードの種類:</label>
+        <select id="sanka-card-type" name="sanka_card_type" class="form-select" style="width: 300px; border-color: #0dcaf0;">
             <option value="">選択してください</option>
             {% for card_type in participation_cards %}
                 <option value="{{ card_type }}">{{ card_type }}</option>
@@ -909,7 +931,7 @@
     </div>
 
     <!-- 複写オプション -->
-    <div id="copy-options" style="display: none;">
+    <div id="copy-options" style="display: none;" class="mb-4">
         <h2>複写オプション</h2>
         <table class="copy-options-table">
             <tr>
@@ -1020,33 +1042,35 @@
         <p id="discount-message"></p>
     </div>
 
-    <button type="button" onclick="calculateEstimate()">見積もり計算</button><br><br>
+    <!-- 見積もり計算ボタン -->
+    <button type="button" onclick="calculateEstimate()" class="btn btn-info mb-3">見積もり計算</button>
 
-    
-    <p id="estimate-result">見積もり金額: - 円</p>
-    <p id="estimate-tnk">単価: - 円</p>
+    <!-- 見積もり結果 -->
+    <p id="estimate-result" class="mb-1">見積もり金額: - 円</p>
+    <p id="estimate-tnk" class="mb-3">単価: - 円</p>
 
     <!-- 追加（増刷）のチェックボックス -->
-    <div class="form-group">
-        <input type="checkbox" id="additional-print" name="additional_print">
-        <label for="additional-print">追加（増刷）</label>
+    <div class="form-check mb-3">
+        <input type="checkbox" id="additional-print" name="additional_print" class="form-check-input">
+        <label for="additional-print" class="form-check-label">追加（増刷）</label>
     </div>
 
     <!-- 備考の入力フィールド -->
-    <br>
-    <div class="form-group">
-        <label for="remarks">備考：</label><br>
-        <textarea id="remarks" name="remarks" style="width: 400px; height: 100px;"></textarea>
+    <div class="form-group mb-4">
+        <label for="remarks" class="form-label">備考：</label>
+        <textarea id="remarks" name="remarks" class="form-control" style="width: 400px; height: 100px; border-color: #0dcaf0;"></textarea>
     </div>
-    <br>
 
     <!-- 注文書作成ボタン（初期状態では非表示） -->
-    <button type="button" id="order-create-button" onclick="order_create()" style="display: none;">注文書作成</button>
-    <br><br>
+    <button type="button" id="order-create-button" onclick="order_create()" style="display: none;" class="btn btn-info mb-3">注文書作成</button>
     
-    <!-- ログアウトボタンとクリアボタンを追加 -->
-    <button type="button" onclick="window.location.href='/accounts/login/'">ログアウト</button>
-    <button type="button" onclick="window.location.reload()">クリア</button>
-    <br><br>
+    <!-- ログアウトボタンとクリアボタン -->
+    <div class="mb-3">
+        <button type="button" onclick="window.location.href='/accounts/login/'" class="btn btn-secondary me-2">ログアウト</button>
+        <button type="button" onclick="window.location.reload()" class="btn btn-secondary">クリア</button>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

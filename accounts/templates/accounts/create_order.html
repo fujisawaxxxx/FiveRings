@@ -2,31 +2,69 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>注文書作成</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        table {
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .order-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 0 auto;
+            max-width: 800px;
+        }
+        .order-title {
+            color: #0dcaf0;
+            margin-bottom: 25px;
+            font-weight: 600;
+            border-bottom: 2px solid #0dcaf0;
+            padding-bottom: 10px;
+        }
+        .table {
             border-collapse: collapse;
-            width: 50%;
-            margin: 20px auto;
+            width: 100%;
         }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
+        .table th {
+            background-color: rgba(13, 202, 240, 0.1);
+            color: #0a58ca;
+            font-weight: 500;
         }
         .success-message {
-            background-color: #4CAF50;
+            background-color: #0dcaf0;
             color: white;
             padding: 15px;
-            margin: 10px 0;
+            margin: 10px 0 20px 0;
             border-radius: 5px;
             font-weight: bold;
             text-align: center;
             font-size: 1.1em;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-info {
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #0bacce;
+            border-color: #0bacce;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
+            color: white;
         }
     </style>
     <script>
@@ -36,134 +74,145 @@
     </script>
 </head>
 <body>
-    <h1>注文書作成</h1>
+    <div class="container order-container">
+        <h1 class="order-title text-center">注文書作成</h1>
 
-    {% if success_message %}
-    <div class="success-message">
-        {{ success_message }}
+        {% if success_message %}
+        <div class="success-message">
+            {{ success_message }}
+        </div>
+        {% endif %}
+
+        <table class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="w-25">項目</th>
+                    <th>内容</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>商品の種類</td>
+                    <td>{% if product_type == 'consent-color' %}同意説明書（カラー）
+                        {% elif product_type == 'consent-monochrome' %}同意説明書（モノクロ）
+                        {% elif product_type == 'case-card' %}ケースカード（症例報告書）
+                        {% elif product_type == 'chiken-plan' %}治験実施計画書
+                        {% elif product_type == 'medication-diary' %}服薬日誌
+                        {% elif product_type == 'participation-card' %}参加カード
+                        {% elif product_type == 'generic' %}汎用
+                        {% endif %}</td>
+                </tr>
+                {% if invoice_detail != '-' %}
+                <tr>
+                    <td>詳細請求書名</td>
+                    <td>{{ invoice_detail }}</td>
+                </tr>
+                {% endif %}
+                {% if upload_file != '-' %}
+                <tr>
+                    <td>入稿ファイル名</td>
+                    <td>{{ upload_file }}</td>
+                </tr>
+                {% endif %}
+                {% if quantity != '-' %}
+                <tr>
+                    <td>数量</td>
+                    <td>{{ quantity }}</td>
+                </tr>
+                {% endif %}
+                {% if content != '-' %}
+                <tr>
+                    <td>本文</td>
+                    <td>{{ content }}</td>
+                </tr>
+                {% endif %}
+                {% if product_type == 'participation-card' and sanka_card_type != '-' %}
+                <tr>
+                    <td>参加カードの種類</td>
+                    <td>{{ sanka_card_type }}</td>
+                </tr>
+                {% endif %}
+                {% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}
+                    {% if fukusha1 != '-' %}
+                    <tr>
+                        <td>複写1</td>
+                        <td>{{ fukusha1 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if fukusha2 != '-' %}
+                    <tr>
+                        <td>複写2</td>
+                        <td>{{ fukusha2 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if fukusha3 != '-' %}
+                    <tr>
+                        <td>複写3</td>
+                        <td>{{ fukusha3 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if fukusha4 != '-' %}
+                    <tr>
+                        <td>複写なしミシン目</td>
+                        <td>{{ fukusha4 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if fukusha5 != '-' %}
+                    <tr>
+                        <td>複写オプション</td>
+                        <td>{{ fukusha5 }}</td>
+                    </tr>
+                    {% endif %}
+                {% endif %}
+                {% if total_pages != '-' %}
+                <tr>
+                    <td>総頁数</td>
+                    <td>{{ total_pages }}</td>
+                </tr>
+                {% endif %}
+                {% if unit_price != '-' %}
+                <tr>
+                    <td>単価</td>
+                    <td>{{ unit_price }} 円</td>
+                </tr>
+                {% endif %}
+                {% if estimate_result != '-' %}
+                <tr>
+                    <td class="table-info">見積もり金額</td>
+                    <td class="table-info fw-bold">{{ estimate_result }} 円</td>
+                </tr>
+                {% endif %}
+                {% if additional_print == 'true' %}
+                <tr>
+                    <td>追加（増刷）</td>
+                    <td>はい</td>
+                </tr>
+                {% endif %}
+                {% if no_holes == 'true' %}
+                <tr>
+                    <td>2穴不要</td>
+                    <td>〇</td>
+                </tr>
+                {% endif %}
+                {% if remarks != '-' %}
+                <tr>
+                    <td>備考</td>
+                    <td>{{ remarks }}</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        
+        <div class="d-flex justify-content-center mt-4 gap-3">
+            <form method="POST" class="me-2">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-info" onclick="return confirm('この内容で発注を確定しますか？')">発注依頼</button>
+            </form>
+            <button type="button" class="btn btn-secondary" onclick="back_main()">戻る</button>
+        </div>
     </div>
-    {% endif %}
 
-    <table>
-        <tr>
-            <th>項目</th>
-            <th>内容</th>
-        </tr>
-        <tr>
-            <td>商品の種類</td>
-            <td>{% if product_type == 'consent-color' %}同意説明書（カラー）
-                {% elif product_type == 'consent-monochrome' %}同意説明書（モノクロ）
-                {% elif product_type == 'case-card' %}ケースカード（症例報告書）
-                {% elif product_type == 'chiken-plan' %}治験実施計画書
-                {% elif product_type == 'medication-diary' %}服薬日誌
-                {% elif product_type == 'participation-card' %}参加カード
-                {% elif product_type == 'generic' %}汎用
-                {% endif %}</td>
-        </tr>
-        {% if invoice_detail != '-' %}
-        <tr>
-            <td>詳細請求書名</td>
-            <td>{{ invoice_detail }}</td>
-        </tr>
-        {% endif %}
-        {% if upload_file != '-' %}
-        <tr>
-            <td>入稿ファイル名</td>
-            <td>{{ upload_file }}</td>
-        </tr>
-        {% endif %}
-        {% if quantity != '-' %}
-        <tr>
-            <td>数量</td>
-            <td>{{ quantity }}</td>
-        </tr>
-        {% endif %}
-        {% if content != '-' %}
-        <tr>
-            <td>本文</td>
-            <td>{{ content }}</td>
-        </tr>
-        {% endif %}
-        {% if product_type == 'participation-card' and sanka_card_type != '-' %}
-        <tr>
-            <td>参加カードの種類</td>
-            <td>{{ sanka_card_type }}</td>
-        </tr>
-        {% endif %}
-        {% if product_type == 'consent-color' or product_type == 'consent-monochrome' %}
-            {% if fukusha1 != '-' %}
-            <tr>
-                <td>複写1</td>
-                <td>{{ fukusha1 }}</td>
-            </tr>
-            {% endif %}
-            {% if fukusha2 != '-' %}
-            <tr>
-                <td>複写2</td>
-                <td>{{ fukusha2 }}</td>
-            </tr>
-            {% endif %}
-            {% if fukusha3 != '-' %}
-            <tr>
-                <td>複写3</td>
-                <td>{{ fukusha3 }}</td>
-            </tr>
-            {% endif %}
-            {% if fukusha4 != '-' %}
-            <tr>
-                <td>複写なしミシン目</td>
-                <td>{{ fukusha4 }}</td>
-            </tr>
-            {% endif %}
-            {% if fukusha5 != '-' %}
-            <tr>
-                <td>複写オプション</td>
-                <td>{{ fukusha5 }}</td>
-            </tr>
-            {% endif %}
-        {% endif %}
-        {% if total_pages != '-' %}
-        <tr>
-            <td>総頁数</td>
-            <td>{{ total_pages }}</td>
-        </tr>
-        {% endif %}
-        {% if unit_price != '-' %}
-        <tr>
-            <td>単価</td>
-            <td>{{ unit_price }} 円</td>
-        </tr>
-        {% endif %}
-        {% if estimate_result != '-' %}
-        <tr>
-            <td>見積もり金額</td>
-            <td>{{ estimate_result }} 円</td>
-        </tr>
-        {% endif %}
-        {% if additional_print == 'true' %}
-        <tr>
-            <td>追加（増刷）</td>
-            <td>はい</td>
-        </tr>
-        {% endif %}
-        {% if no_holes == 'true' %}
-        <tr>
-            <td>2穴不要</td>
-            <td>〇</td>
-        </tr>
-        {% endif %}
-        {% if remarks != '-' %}
-        <tr>
-            <td>備考</td>
-            <td>{{ remarks }}</td>
-        </tr>
-        {% endif %}
-    </table>
-    <br><br>
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit" onclick="return confirm('この内容で発注を確定しますか？')">発注依頼</button>
-    </form>
-    <button type="button" onclick="back_main()">戻る</button>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

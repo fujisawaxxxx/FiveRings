@@ -71,6 +71,19 @@
         function back_main() {
             window.location.href = "{% url 'main' %}";
         }
+        
+        function confirmOrder(form) {
+            if (confirm('この内容で発注を確定しますか？')) {
+                // 発注依頼ボタンを非活性化
+                document.getElementById('order-button').disabled = true;
+                document.getElementById('order-button').innerHTML = '処理中...';
+                
+                // フォームを送信
+                form.submit();
+                return true;
+            }
+            return false;
+        }
     </script>
 </head>
 <body>
@@ -204,9 +217,9 @@
         </table>
         
         <div class="d-flex justify-content-center mt-4 gap-3">
-            <form method="POST" class="me-2">
+            <form method="POST" class="me-2" onsubmit="return confirmOrder(this);">
                 {% csrf_token %}
-                <button type="submit" class="btn btn-info" onclick="return confirm('この内容で発注を確定しますか？')">発注依頼</button>
+                <button type="submit" id="order-button" class="btn btn-info">発注依頼</button>
             </form>
             <button type="button" class="btn btn-secondary" onclick="back_main()">戻る</button>
         </div>

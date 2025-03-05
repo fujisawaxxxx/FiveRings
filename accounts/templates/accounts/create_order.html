@@ -84,6 +84,32 @@
             }
             return false;
         }
+        
+        // 数値をカンマ区切りにする関数
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        
+        // ページ読み込み時に実行
+        window.onload = function() {
+            // 金額を含むセルを取得
+            var priceCells = document.querySelectorAll("td:last-child");
+            
+            // 各セルをチェック
+            priceCells.forEach(function(cell) {
+                var text = cell.innerText;
+                // 「円」を含むセルのみ処理
+                if (text.includes('円')) {
+                    // 数値部分を抽出
+                    var numPart = text.replace(/[^0-9]/g, '');
+                    if (numPart) {
+                        // カンマ区切りに変換して置換
+                        var formattedNum = numberWithCommas(numPart);
+                        cell.innerText = text.replace(numPart, formattedNum);
+                    }
+                }
+            });
+        };
     </script>
 </head>
 <body>

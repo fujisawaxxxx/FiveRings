@@ -129,8 +129,8 @@ def create_order_view(request):
                 '複写なしミシン目': order.fukusha4 if order.fukusha4 != '-' else None,
                 '複写オプション': order.fukusha5 if order.fukusha5 != '-' else None,
                 '総ページ数': f"{order.total_pages}頁" if order.total_pages != '-' else None,
-                '単価': f"{order.unit_price}円",
-                '見積金額': f"{order.estimate_result}円",
+                '単価': f"{order.unit_price:,}円",
+                '見積金額': f"{order.estimate_result:,}円",
                 '追加（増刷）': 'あり' if order.additional_print else None,
                 '２穴': '不要' if order.no_holes else None,
                 '備考': order.remarks if order.remarks != '-' else None,
@@ -182,8 +182,8 @@ def create_order_view(request):
                 'product_type': request.GET.get('product_type', '選択されていません'),
                 'quantity': request.GET.get('quantity', '-'),
                 'content': request.GET.get('content', '-'),
-                'unit_price': request.GET.get('unit_price', '-'),
-                'estimate_result': request.GET.get('estimate_result', '-'),
+                'unit_price': f"{int(request.GET.get('unit_price', 0)):,}",
+                'estimate_result': f"{int(request.GET.get('estimate_result', 0)):,}",
                 'invoice_detail': request.GET.get('invoice_detail', '-'),
                 'upload_file': request.GET.get('upload_file', '-'),
                 'sanka_card_type': request.GET.get('sanka_card_type', '-'),
@@ -202,12 +202,22 @@ def create_order_view(request):
             messages.error(request, f'発注処理中にエラーが発生しました: {str(e)}')
     
     # 通常の表示処理
+    unit_price = request.GET.get('unit_price', '-')
+    estimate_result = request.GET.get('estimate_result', '-')
+    
+    # 数値の場合はカンマ区切りに変換
+    if unit_price != '-' and unit_price.isdigit():
+        unit_price = f"{int(unit_price):,}"
+    
+    if estimate_result != '-' and estimate_result.isdigit():
+        estimate_result = f"{int(estimate_result):,}"
+    
     context = {
         'product_type': request.GET.get('product_type', '選択されていません'),
         'quantity': request.GET.get('quantity', '-'),
         'content': request.GET.get('content', '-'),
-        'unit_price': request.GET.get('unit_price', '-'),
-        'estimate_result': request.GET.get('estimate_result', '-'),
+        'unit_price': unit_price,
+        'estimate_result': estimate_result,
         'invoice_detail': request.GET.get('invoice_detail', '-'),
         'upload_file': request.GET.get('upload_file', '-'),
         'sanka_card_type': request.GET.get('sanka_card_type', '-'),

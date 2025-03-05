@@ -661,8 +661,17 @@
             const productType = document.getElementById("document-type").value;
             const quantity = document.getElementById("quantity").value || "-";
             const content = document.getElementById("content").value || "-";
-            const unitPrice = document.getElementById("estimate-tnk").innerText.replace("単価: ", "").replace("円", "") || "-";
-            const estimateResult = document.getElementById("estimate-result").innerText.replace("見積もり金額: ", "").replace("円", "") || "-";
+            
+            // カンマを削除して数値のみを取得
+            const unitPrice = document.getElementById("estimate-tnk").innerText
+                .replace("単価: ", "")
+                .replace("円", "")
+                .replace(/,/g, "") || "-";
+            
+            const estimateResult = document.getElementById("estimate-result").innerText
+                .replace("見積もり金額: ", "")
+                .replace("円", "")
+                .replace(/,/g, "") || "-";
 
             // 複写オプションの日本語表記への変換
             function getFukusha1Text(value) {

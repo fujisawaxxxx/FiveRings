@@ -52,6 +52,7 @@ class OrderHistory(models.Model):
     total_pages = models.CharField(max_length=50, blank=True, null=True, verbose_name="総頁数")
     unit_price = models.IntegerField(verbose_name="単価")
     estimate_result = models.IntegerField(verbose_name="見積もり金額")
+
     
     # オプション情報
     additional_print = models.BooleanField(default=False, verbose_name="追加（増刷）")

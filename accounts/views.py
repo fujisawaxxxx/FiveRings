@@ -162,7 +162,7 @@ def create_order_view(request):
             email.send(fail_silently=False)
 
             # ユーザー向けメール本文の作成
-            user_mail_body = f"{request.user.username} 様\n\n"
+            user_mail_body = f"{request.user.username} 様\n\n以下の内容でご注文を受け付けました。\n\n"
             for key, value in mail_items.items():
                 if value is not None:  # 値が None でない場合のみ追加
                     user_mail_body += f"{key}: {value}\n"

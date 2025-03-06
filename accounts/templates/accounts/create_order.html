@@ -74,7 +74,7 @@
         
         function confirmOrder(form) {
             if (confirm('この内容で発注を確定しますか？')) {
-                // 発注依頼ボタンを非活性化
+                // 発注依頼ボタンを処理中にして非活性化
                 document.getElementById('order-button').disabled = true;
                 document.getElementById('order-button').innerHTML = '処理中...';
                 

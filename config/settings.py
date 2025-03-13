@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-mz3xy)wpojb+m9%5*!h68kdd#d=)gw30yj$6*4e5gg(=@55i=8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', '192.168.1.196', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -140,3 +140,5 @@ EMAIL_HOST_PASSWORD = 'nueykebjxcwerbht'  # アプリパスワードを設定す
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CSRF_TRUSTED_ORIGINS = ['http://192.168.1.196:8000']

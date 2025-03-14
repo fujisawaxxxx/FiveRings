@@ -729,6 +729,7 @@
             }
 
             // 追加データを取得（複写オプションは日本語表記に変換）
+            const facility = document.getElementById("facility").value || "-";
             const invoiceDetail = document.getElementById("invoice-detail").value || "-";
             const uploadFileName = document.getElementById("selected-filename").innerText || "-";
             const sankaCardType = document.getElementById("sanka-card-type").value || "-";
@@ -755,6 +756,7 @@
                 `&unit_price=${encodeURIComponent(unitPrice)}` +
                 `&estimate_result=${encodeURIComponent(estimateResult)}` +
                 `&invoice_detail=${encodeURIComponent(invoiceDetail)}` +
+                `&facility=${encodeURIComponent(facility)}` +
                 `&upload_file=${encodeURIComponent(uploadFileName)}` +
                 `&upload_file_timestamped=${encodeURIComponent(uploadFileTimestamped)}` +
                 `&sanka_card_type=${encodeURIComponent(sankaCardType)}` +
@@ -956,6 +958,8 @@
                     <label for="invoice-detail" class="form-label mb-0 me-2">詳細請求書名：</label>
                     <input type="text" id="invoice-detail" name="invoice_detail" class="form-control" style="width: 300px; border-color: #0dcaf0;">
                 </div>
+
+
                 
                 <!-- 入稿ファイル -->
                 <div class="d-flex align-items-center">
@@ -968,6 +972,13 @@
             </div>
         </div>
     </div>
+
+    <!-- 施設名 -->
+    <div class="me-4 d-flex align-items-center">
+        <label for="facility" class="form-label mb-0 me-2">施設名：</label>
+        <input type="text" id="facility" name="facility" class="form-control" style="width: 300px; border-color: #0dcaf0;">
+    </div>
+    <br>
 
     <!-- タイムスタンプ付きファイル名を保存する隠しフィールド -->
     <input type="hidden" id="upload-file-timestamped" name="upload_file_timestamped">

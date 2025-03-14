@@ -55,6 +55,8 @@ def create_order_view(request):
             upload_file = request.GET.get('upload_file', '')
             # タイムスタンプ付きのファイル名を取得
             upload_file_timestamped = request.GET.get('upload_file_timestamped', '')
+            # 施設名を取得
+            facility = request.GET.get('facility', '')
 
             # OrderHistoryオブジェクトの作成
             order = OrderHistory.objects.create(
@@ -77,7 +79,8 @@ def create_order_view(request):
                 estimate_result=int(request.GET.get('estimate_result', 0)),
                 additional_print=request.GET.get('additional_print', 'false') == 'true',
                 no_holes=request.GET.get('no_holes', 'false') == 'true',
-                remarks=request.GET.get('remarks', '')
+                remarks=request.GET.get('remarks', ''),
+                facility=facility  # 施設名を保存
             )
 
             # 管理者のメールアドレスを取得
@@ -120,6 +123,7 @@ def create_order_view(request):
                 '商品種類': product_type_ja,
                 '詳細請求書名': order.invoice_detail if order.invoice_detail != '-' else None,
                 'アップロードファイル': order.upload_file if order.upload_file != '-' else None,
+                '施設名': order.facility if order.facility else None,  # 施設名をメールに追加
                 '数量': order.quantity,
                 '本文': f"{order.content}頁" if order.content != '-' else None,
                 '参加カード種類': order.sanka_card_type if order.sanka_card_type != '-' else None,
@@ -186,6 +190,7 @@ def create_order_view(request):
                 'estimate_result': f"{int(request.GET.get('estimate_result', 0)):,}",
                 'invoice_detail': request.GET.get('invoice_detail', '-'),
                 'upload_file': request.GET.get('upload_file', '-'),
+                'facility': request.GET.get('facility', '-'),  # 施設名をコンテキストに追加
                 'sanka_card_type': request.GET.get('sanka_card_type', '-'),
                 'fukusha1': request.GET.get('fukusha1', '-'),
                 'fukusha2': request.GET.get('fukusha2', '-'),
@@ -220,6 +225,7 @@ def create_order_view(request):
         'estimate_result': estimate_result,
         'invoice_detail': request.GET.get('invoice_detail', '-'),
         'upload_file': request.GET.get('upload_file', '-'),
+        'facility': request.GET.get('facility', '-'),  # 施設名をコンテキストに追加
         'sanka_card_type': request.GET.get('sanka_card_type', '-'),
         'fukusha1': request.GET.get('fukusha1', '-'),
         'fukusha2': request.GET.get('fukusha2', '-'),

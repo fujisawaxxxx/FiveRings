@@ -63,6 +63,9 @@ class OrderHistory(models.Model):
     # 作成日時
     created_at = models.DateTimeField(default=timezone.now, verbose_name="作成日時")
 
+    # 施設名を追加
+    facility = models.CharField(max_length=255, blank=True, null=True, verbose_name="施設名")
+
     def save(self, *args, **kwargs):
         if not self.order_number:
             # 最後の注文番号を取得

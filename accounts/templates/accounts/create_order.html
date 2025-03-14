@@ -147,6 +147,12 @@
                     <td>{{ invoice_detail }}</td>
                 </tr>
                 {% endif %}
+                {% if facility != '-' %}
+                <tr>
+                    <td>施設名</td>
+                    <td>{{ facility }}</td>
+                </tr>
+                {% endif %}
                 {% if upload_file != '-' %}
                 <tr>
                     <td>入稿ファイル名</td>

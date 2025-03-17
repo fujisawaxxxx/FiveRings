@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'items',
     'order_rireki',
+    'project_name',
 ]
 
 MIDDLEWARE = [

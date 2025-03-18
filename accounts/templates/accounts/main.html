@@ -657,6 +657,13 @@
 
 
         function order_create() {
+            // ファイルがアップロードされているかチェック
+            const uploadFileName = document.getElementById("selected-filename").innerText || "-";
+            if (uploadFileName === "" || uploadFileName === "-") {
+                alert("入稿ファイルを選択してください。");
+                return; // 処理を中断
+            }
+
             // 基本データを取得
             const productType = document.getElementById("document-type").value;
             const quantity = document.getElementById("quantity").value || "-";
@@ -731,7 +738,6 @@
             // 追加データを取得（複写オプションは日本語表記に変換）
             const facility = document.getElementById("facility").value || "-";
             const invoiceDetail = document.getElementById("invoice-detail").value || "-";
-            const uploadFileName = document.getElementById("selected-filename").innerText || "-";
             const sankaCardType = document.getElementById("sanka-card-type").value || "-";
             const fukusha1 = getFukusha1Text(document.getElementById("fukusha1").value) || "-";
             const fukusha2 = getFukusha2Text(document.getElementById("fukusha2").value) || "-";

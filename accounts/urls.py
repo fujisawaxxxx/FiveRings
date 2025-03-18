@@ -8,4 +8,5 @@ urlpatterns = [
     path('main/', views.main_view, name='main'),  # メイン画面へのURL
     path('create_order/', views.create_order_view, name='create_order'),  # 注文確認画面へのURL
     path('upload/', views.upload_file, name='upload_file'),
+    path('get_order_data/<str:order_number>/', views.get_order_data, name='get_order_data'),
 ]

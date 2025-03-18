@@ -792,6 +792,34 @@
             if (orderSuccess) {
                 alert(orderSuccess);
             }
+            
+            // 流用ボタンのクリックイベントを設定
+            const reuseButton = document.getElementById('reuse-button');
+            if (reuseButton) {
+                reuseButton.addEventListener('click', function() {
+                    const orderNumber = document.getElementById('reuse-code').value.trim();
+                    if (!orderNumber) {
+                        alert('流用コードを入力してください');
+                        return;
+                    }
+                    
+                    // 流用コードを使って注文データを取得
+                    fetch(`/accounts/get_order_data/${orderNumber}/`)
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.success) {
+                                // 詳細請求書名を設定
+                                document.getElementById('invoice-detail').value = result.data.invoice_detail || '';
+                            } else {
+                                alert(result.error || '注文データの取得に失敗しました');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('注文データの取得中にエラーが発生しました');
+                        });
+                });
+            }
         });
 
         const element = document.getElementById('upload-file');
@@ -956,10 +984,14 @@
     <!-- タイトル部分を装飾 -->
     <div class="mb-4 d-flex justify-content-between align-items-center">
         <h3 class="text-info fw-bold border-bottom border-info pb-2">見積もり作成</h3>
-        <div>
-            <!-- 既存の注文履歴ボタンのみ残す -->
-            <a href="/admin/" class="btn btn-secondary btn-sm me-2" target="_blank">管理画面</a>
-            <!-- プロジェクト追加ボタンを削除 -->
+        <div class="d-flex align-items-center">
+            <!-- 流用機能 -->
+            <div class="me-3 d-flex align-items-center">
+                <input type="text" id="reuse-code" name="reuse_code" class="form-control form-control-sm me-2" style="width: 150px; border-color: #0dcaf0;" placeholder="流用コード">
+                <button type="button" id="reuse-button" class="btn btn-info btn-sm">流用</button>
+            </div>
+            <!-- 既存の管理画面ボタン -->
+            <a href="/admin/" class="btn btn-secondary btn-sm" target="_blank">管理画面</a>
         </div>
     </div>
     

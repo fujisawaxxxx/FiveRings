@@ -290,3 +290,33 @@ def get_product_type_display(product_type):
         'generic': '汎用',  # 汎用商品タイプの表示名を追加
     }
     return product_types.get(product_type, product_type)
+
+@login_required
+def get_order_data(request, order_number):
+    try:
+        # 注文番号から注文履歴を検索
+        order = OrderHistory.objects.get(order_number=order_number)
+        
+        # レスポンスデータの作成
+        data = {
+            'success': True,
+            'data': {
+                'invoice_detail': order.invoice_detail or '',
+                'facility': order.facility or '',
+                'project_name': order.project_name or '',
+                # 必要に応じて他のフィールドも追加できます
+            }
+        }
+        
+        return JsonResponse(data)
+    
+    except OrderHistory.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': '指定された注文番号のデータが見つかりませんでした'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'データ取得エラー: {str(e)}'
+        })

@@ -13,6 +13,7 @@ from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 import time
 from django.utils import timezone
+from project_name.models import Project
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -281,3 +282,19 @@ def get_product_type_display(product_type):
         'generic': '汎用',  # 汎用商品タイプの表示名を追加
     }
     return product_types.get(product_type, product_type)
+
+def add_project(request):
+    if request.method == 'POST':
+        project_name = request.POST.get('project_name')
+        if project_name:
+            try:
+                Project.objects.create(project_name=project_name)
+                messages.success(request, 'プロジェクトが正常に追加されました。')
+                # フォームをクリアするために同じページを再表示
+                return render(request, 'accounts/add_project.html')
+            except Exception as e:
+                messages.error(request, f'エラーが発生しました: {str(e)}')
+        else:
+            messages.error(request, 'プロジェクト名を入力してください。')
+    
+    return render(request, 'accounts/add_project.html')

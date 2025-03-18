@@ -810,6 +810,8 @@
                             if (result.success) {
                                 // 詳細請求書名を設定
                                 document.getElementById('invoice-detail').value = result.data.invoice_detail || '';
+                                // 施設名を設定
+                                document.getElementById('facility').value = result.data.facility || '';
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

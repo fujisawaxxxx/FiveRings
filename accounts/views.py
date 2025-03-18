@@ -297,6 +297,23 @@ def get_order_data(request, order_number):
         # 注文番号から注文履歴を検索
         order = OrderHistory.objects.get(order_number=order_number)
         
+        # 商品タイプIDを取得（HTMLのプルダウンで選択される値）
+        product_type_map = {
+            '同意説明書（カラー）': 'consent-color',
+            '同意説明書（モノクロ）': 'consent-monochrome',
+            'ケースカード（症例報告書）': 'case-card',
+            '治験実施計画書': 'chiken-plan',
+            '服薬日誌': 'medication-diary',
+            '参加カード': 'participation-card',
+            '汎用': 'generic',
+        }
+        
+        # データベースの値をフロントエンドの値に変換
+        # product_typeは保存されている値（同意説明書（カラー）など）
+        # ドロップダウンの値（consent-colorなど）に変換
+        product_type_display = get_product_type_display(order.product_type)
+        product_type_id = product_type_map.get(product_type_display, order.product_type)
+        
         # レスポンスデータの作成
         data = {
             'success': True,
@@ -304,7 +321,8 @@ def get_order_data(request, order_number):
                 'invoice_detail': order.invoice_detail or '',
                 'facility': order.facility or '',
                 'project_name': order.project_name or '',
-                # 必要に応じて他のフィールドも追加できます
+                'product_type': product_type_id,
+                # 必要に応じて他のフィールドを追加
             }
         }
         

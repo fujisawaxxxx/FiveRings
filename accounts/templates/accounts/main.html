@@ -814,6 +814,14 @@
                                 document.getElementById('facility').value = result.data.facility || '';
                                 // プロジェクト名を設定
                                 document.getElementById('project').value = result.data.project_name || '';
+                                
+                                // 商品タイプを設定
+                                if (result.data.product_type) {
+                                    const documentTypeSelect = document.getElementById('document-type');
+                                    documentTypeSelect.value = result.data.product_type;
+                                    // 商品タイプを変更した後にUIを更新
+                                    toggleCopyOptions();
+                                }
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

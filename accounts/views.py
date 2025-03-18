@@ -129,7 +129,8 @@ def create_order_view(request):
                 '商品種類': product_type_ja,
                 '詳細請求書名': order.invoice_detail if order.invoice_detail != '-' else None,
                 'アップロードファイル': order.upload_file if order.upload_file != '-' else None,
-                '施設名': order.facility if order.facility else None,  # 施設名をメールに追加
+                '施設名': order.facility if order.facility else None,
+                'プロジェクト名': order.project_name if order.project_name != '-' else None,
                 '数量': order.quantity,
                 '本文': f"{order.content}頁" if order.content != '-' else None,
                 '参加カード種類': order.sanka_card_type if order.sanka_card_type != '-' else None,

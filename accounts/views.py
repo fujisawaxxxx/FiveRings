@@ -20,8 +20,12 @@ def main_view(request):
     # 管理画面で登録された参加カードの種類を取得
     participation_cards = ParticipationCard.objects.all().values_list('cardtype', flat=True)
     
+    # プロジェクト一覧を取得
+    projects = Project.objects.all().values_list('project_name', flat=True)
+    
     context = {
         'participation_cards': participation_cards,
+        'projects': projects,  # プロジェクト一覧をコンテキストに追加
     }
     return render(request, 'accounts/main.html', context)
 

@@ -812,6 +812,8 @@
                                 document.getElementById('invoice-detail').value = result.data.invoice_detail || '';
                                 // 施設名を設定
                                 document.getElementById('facility').value = result.data.facility || '';
+                                // プロジェクト名を設定
+                                document.getElementById('project').value = result.data.project_name || '';
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

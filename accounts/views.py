@@ -287,13 +287,15 @@ def add_project(request):
     if request.method == 'POST':
         project_name = request.POST.get('project_name')
         if project_name:
-            try:
-                Project.objects.create(project_name=project_name)
-                messages.success(request, 'プロジェクトが正常に追加されました。')
-                # フォームをクリアするために同じページを再表示
-                return render(request, 'accounts/add_project.html')
-            except Exception as e:
-                messages.error(request, f'エラーが発生しました: {str(e)}')
+            # 既存のプロジェクト名をチェック
+            if Project.objects.filter(project_name=project_name).exists():
+                messages.warning(request, f'「{project_name}」は既に登録されています。')
+            else:
+                try:
+                    Project.objects.create(project_name=project_name)
+                    messages.success(request, 'プロジェクトが正常に追加されました。')
+                except Exception as e:
+                    messages.error(request, f'エラーが発生しました: {str(e)}')
         else:
             messages.error(request, 'プロジェクト名を入力してください。')
     

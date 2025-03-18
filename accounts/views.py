@@ -195,7 +195,8 @@ def create_order_view(request):
                 'estimate_result': f"{int(request.GET.get('estimate_result', 0)):,}",
                 'invoice_detail': request.GET.get('invoice_detail', '-'),
                 'upload_file': request.GET.get('upload_file', '-'),
-                'facility': request.GET.get('facility', '-'),  # 施設名をコンテキストに追加
+                'facility': request.GET.get('facility', '-'),
+                'project_name': request.GET.get('project_name', '-'),
                 'sanka_card_type': request.GET.get('sanka_card_type', '-'),
                 'fukusha1': request.GET.get('fukusha1', '-'),
                 'fukusha2': request.GET.get('fukusha2', '-'),
@@ -230,7 +231,8 @@ def create_order_view(request):
         'estimate_result': estimate_result,
         'invoice_detail': request.GET.get('invoice_detail', '-'),
         'upload_file': request.GET.get('upload_file', '-'),
-        'facility': request.GET.get('facility', '-'),  # 施設名をコンテキストに追加
+        'facility': request.GET.get('facility', '-'),
+        'project_name': request.GET.get('project_name', '-'),
         'sanka_card_type': request.GET.get('sanka_card_type', '-'),
         'fukusha1': request.GET.get('fukusha1', '-'),
         'fukusha2': request.GET.get('fukusha2', '-'),

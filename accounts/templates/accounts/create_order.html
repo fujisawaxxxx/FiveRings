@@ -153,6 +153,12 @@
                     <td>{{ facility }}</td>
                 </tr>
                 {% endif %}
+                {% if project_name != '-' %}
+                <tr>
+                    <td>プロジェクト名</td>
+                    <td>{{ project_name }}</td>
+                </tr>
+                {% endif %}
                 {% if upload_file != '-' %}
                 <tr>
                     <td>入稿ファイル名</td>

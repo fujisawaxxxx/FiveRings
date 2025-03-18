@@ -748,6 +748,9 @@
             // アップロードファイル関連の情報を取得
             const uploadFileTimestamped = document.getElementById("upload-file-timestamped").value || "-";
 
+            // プロジェクト名を取得
+            const projectName = document.getElementById("project").value || "-";
+
             // URLにデータを渡して遷移
             const url = `{% url 'create_order' %}?` + 
                 `product_type=${encodeURIComponent(productType)}` +
@@ -768,6 +771,7 @@
                 `&total_pages=${encodeURIComponent(totalPages)}` +
                 `&additional_print=${encodeURIComponent(additionalPrint)}` +
                 `&no_holes=${encodeURIComponent(noHoles)}` +
+                `&project_name=${encodeURIComponent(projectName)}` +
                 `&remarks=${encodeURIComponent(remarks)}`;
 
             window.location.href = url;

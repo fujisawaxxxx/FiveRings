@@ -85,7 +85,8 @@ def create_order_view(request):
                 additional_print=request.GET.get('additional_print', 'false') == 'true',
                 no_holes=request.GET.get('no_holes', 'false') == 'true',
                 remarks=request.GET.get('remarks', ''),
-                facility=facility  # 施設名を保存
+                facility=facility,  # 施設名を保存
+                project_name=request.GET.get('project_name', ''),  # プロジェクト名を保存
             )
 
             # 管理者のメールアドレスを取得

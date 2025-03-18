@@ -65,6 +65,9 @@ class OrderHistory(models.Model):
 
     # 施設名を追加
     facility = models.CharField(max_length=255, blank=True, null=True, verbose_name="施設名")
+    
+    # プロジェクト名を追加
+    project_name = models.CharField(max_length=255, blank=True, null=True, verbose_name="プロジェクト名")
 
     def save(self, *args, **kwargs):
         if not self.order_number:

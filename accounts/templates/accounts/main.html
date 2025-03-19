@@ -852,6 +852,42 @@
                                     document.getElementById('unit-price-field').style.display = 'block';
                                     document.getElementById('unit-price').value = result.data.unit_price;
                                 }
+                                
+                                // 同意説明書の場合、複写関連オプションを設定
+                                if (result.data.product_type === 'consent-color' || result.data.product_type === 'consent-monochrome') {
+                                    // 複写オプションが表示されていることを確認
+                                    document.getElementById('copy-options').style.display = 'block';
+                                    
+                                    // 複写1を設定
+                                    if (result.data.fukusha1) {
+                                        document.getElementById('fukusha1').value = result.data.fukusha1;
+                                        toggleCopyOptionsfukusha1(); // 関連ラベルを更新
+                                    }
+                                    
+                                    // 複写2を設定
+                                    if (result.data.fukusha2) {
+                                        document.getElementById('fukusha2').value = result.data.fukusha2;
+                                        toggleCopyOptionsfukusha2(); // 関連ラベルを更新
+                                    }
+                                    
+                                    // 複写3を設定
+                                    if (result.data.fukusha3) {
+                                        document.getElementById('fukusha3').value = result.data.fukusha3;
+                                        toggleCopyOptionsfukusha3(); // 関連ラベルを更新
+                                    }
+                                    
+                                    // 複写なしミシン目を設定
+                                    if (result.data.fukusha4) {
+                                        document.getElementById('fukusha4').value = result.data.fukusha4;
+                                        toggleCopyOptionsfukusha4(); // 関連ラベルを更新
+                                    }
+                                    
+                                    // 複写オプションを設定
+                                    if (result.data.fukusha5) {
+                                        document.getElementById('fukusha5').value = result.data.fukusha5;
+                                        displayAdditionalCharge(); // 追加料金を表示
+                                    }
+                                }
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

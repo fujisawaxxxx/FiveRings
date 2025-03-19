@@ -327,6 +327,14 @@ def get_order_data(request, order_number):
                 'sanka_card_type': order.sanka_card_type or '',
                 'no_holes': order.no_holes,
                 'unit_price': order.unit_price,
+                
+                # 複写関連のフィールド
+                'fukusha1': _map_fukusha1(order.fukusha1),
+                'fukusha2': _map_fukusha2(order.fukusha2),
+                'fukusha3': _map_fukusha3(order.fukusha3),
+                'fukusha4': _map_fukusha4(order.fukusha4),
+                'fukusha5': _map_fukusha5(order.fukusha5),
+                
                 # 必要に応じて他のフィールドを追加
             }
         }
@@ -343,3 +351,57 @@ def get_order_data(request, order_number):
             'success': False,
             'error': f'データ取得エラー: {str(e)}'
         })
+
+# 複写1の値を変換するヘルパー関数
+def _map_fukusha1(value):
+    fukusha1_map = {
+        '複写なし': 'fukusha1-0',
+        '2枚4頁': 'fukusha1-1',
+        '3枚6頁（基本）': 'fukusha1-2',
+        '4枚8頁': 'fukusha1-3',
+        '5枚10頁': 'fukusha1-4'
+    }
+    return fukusha1_map.get(value, '')
+
+# 複写2の値を変換するヘルパー関数
+def _map_fukusha2(value):
+    fukusha2_map = {
+        '複写なし': 'fukusha2-0',
+        '2枚4頁': 'fukusha2-1',
+        '3枚6頁': 'fukusha2-2',
+        '4枚8頁': 'fukusha2-3',
+        '5枚10頁': 'fukusha2-4'
+    }
+    return fukusha2_map.get(value, '')
+
+# 複写3の値を変換するヘルパー関数
+def _map_fukusha3(value):
+    fukusha3_map = {
+        '複写なし': 'fukusha3-0',
+        '2枚4頁': 'fukusha3-1',
+        '3枚6頁': 'fukusha3-2',
+        '4枚8頁': 'fukusha3-3',
+        '5枚10頁': 'fukusha3-4'
+    }
+    return fukusha3_map.get(value, '')
+
+# 複写なしミシン目の値を変換するヘルパー関数
+def _map_fukusha4(value):
+    fukusha4_map = {
+        'なし': 'fukusha_no-0',
+        '1枚2頁': 'fukusha_no-1',
+        '2枚4頁': 'fukusha_no-2',
+        '3枚6頁': 'fukusha_no-3'
+    }
+    return fukusha4_map.get(value, '')
+
+# 複写オプションの値を変換するヘルパー関数
+def _map_fukusha5(value):
+    fukusha5_map = {
+        'オプションなし': 'fukusha_add_price-0',
+        'カラー3枚複写': 'fukusha_add_price-1',
+        'カラー2枚複写': 'fukusha_add_price-2',
+        '両面3枚複写': 'fukusha_add_price-3',
+        '両面2枚複写': 'fukusha_add_price-4'
+    }
+    return fukusha5_map.get(value, '')

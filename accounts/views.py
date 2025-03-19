@@ -322,6 +322,10 @@ def get_order_data(request, order_number):
                 'facility': order.facility or '',
                 'project_name': order.project_name or '',
                 'product_type': product_type_id,
+                'quantity': order.quantity,
+                'content': order.content,
+                'sanka_card_type': order.sanka_card_type or '',
+                'no_holes': order.no_holes,
                 # 必要に応じて他のフィールドを追加
             }
         }

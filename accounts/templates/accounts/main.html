@@ -783,7 +783,6 @@
             window.location.href = url;
         }
 
-
         window.onload = toggleCopyOptions;
 
         // レスポンスヘッダーから成功メッセージを取得して表示
@@ -821,6 +820,30 @@
                                     documentTypeSelect.value = result.data.product_type;
                                     // 商品タイプを変更した後にUIを更新
                                     toggleCopyOptions();
+                                }
+                                
+                                // 数量を設定
+                                if (result.data.quantity) {
+                                    document.getElementById('quantity').value = result.data.quantity;
+                                }
+                                
+                                // 本文頁を設定
+                                if (result.data.content) {
+                                    document.getElementById('content').value = result.data.content;
+                                }
+                                
+                                // 参加カードの種類を設定
+                                if (result.data.product_type === 'participation-card' && result.data.sanka_card_type) {
+                                    // カードタイプフィールドが表示されていることを確認
+                                    document.getElementById('card-type-field').style.display = 'block';
+                                    document.getElementById('sanka-card-type').value = result.data.sanka_card_type;
+                                }
+                                
+                                // 2穴不要のチェック状態を設定
+                                if (result.data.product_type === 'case-card') {
+                                    // 2穴不要オプションが表示されていることを確認
+                                    document.getElementById('no-holes-option').style.display = 'block';
+                                    document.getElementById('no-holes').checked = result.data.no_holes || false;
                                 }
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');

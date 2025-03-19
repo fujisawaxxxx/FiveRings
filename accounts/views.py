@@ -326,6 +326,7 @@ def get_order_data(request, order_number):
                 'content': order.content,
                 'sanka_card_type': order.sanka_card_type or '',
                 'no_holes': order.no_holes,
+                'unit_price': order.unit_price,
                 # 必要に応じて他のフィールドを追加
             }
         }

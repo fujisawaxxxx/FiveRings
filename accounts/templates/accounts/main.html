@@ -845,6 +845,13 @@
                                     document.getElementById('no-holes-option').style.display = 'block';
                                     document.getElementById('no-holes').checked = result.data.no_holes || false;
                                 }
+                                
+                                // 汎用商品の場合、単価を設定
+                                if (result.data.product_type === 'generic' && result.data.unit_price) {
+                                    // 単価フィールドが表示されていることを確認
+                                    document.getElementById('unit-price-field').style.display = 'block';
+                                    document.getElementById('unit-price').value = result.data.unit_price;
+                                }
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

@@ -888,6 +888,14 @@
                                         displayAdditionalCharge(); // 追加料金を表示
                                     }
                                 }
+                                
+                                // 追加（増刷）チェックボックスの状態を設定
+                                document.getElementById('additional-print').checked = result.data.additional_print || false;
+                                
+                                // 備考欄の設定
+                                if (result.data.remarks) {
+                                    document.getElementById('remarks').value = result.data.remarks;
+                                }
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

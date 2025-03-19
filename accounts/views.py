@@ -327,6 +327,8 @@ def get_order_data(request, order_number):
                 'sanka_card_type': order.sanka_card_type or '',
                 'no_holes': order.no_holes,
                 'unit_price': order.unit_price,
+                'additional_print': order.additional_print,
+                'remarks': order.remarks or '',
                 
                 # 複写関連のフィールド
                 'fukusha1': _map_fukusha1(order.fukusha1),

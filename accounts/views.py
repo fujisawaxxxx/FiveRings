@@ -190,6 +190,16 @@ def create_order_view(request):
             )
             user_email.send(fail_silently=False)
 
+            # メール送信後、アップロードファイルを削除（容量節約のため）
+            if order.upload_file and order.upload_file != '-':
+                file_path = os.path.join(settings.MEDIA_ROOT, 'uploads', order.upload_file_timestamped)
+                if os.path.exists(file_path):
+                    try:
+                        os.remove(file_path)
+                        print(f"ファイル削除: {file_path}")
+                    except Exception as e:
+                        print(f"ファイル削除エラー: {e}")
+
             # 既存の処理を継続
             context = {
                 'success_message': f'注文番号 {order.order_number} で発注が完了しました。',

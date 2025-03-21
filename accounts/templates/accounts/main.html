@@ -896,6 +896,34 @@
                                 if (result.data.remarks) {
                                     document.getElementById('remarks').value = result.data.remarks;
                                 }
+                                
+                                // 流用成功の通知メッセージを表示
+                                const notificationDiv = document.createElement('div');
+                                notificationDiv.className = 'alert alert-success alert-dismissible fade show';
+                                notificationDiv.role = 'alert';
+                                notificationDiv.innerHTML = `
+                                    <strong>【流用完了】</strong> 注文番号 ${orderNumber} のデータを読み込みました。
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                `;
+                                document.querySelector('body').insertBefore(notificationDiv, document.querySelector('.container').firstChild);
+                                
+                                // 5秒後に自動的に通知を消す
+                                setTimeout(() => {
+                                    const alertElement = document.querySelector('.alert');
+                                    if (alertElement) {
+                                        const bsAlert = new bootstrap.Alert(alertElement);
+                                        bsAlert.close();
+                                    }
+                                }, 5000);
+                                
+                                // データ適用後、見積もり計算を自動的に実行
+                                setTimeout(() => {
+                                    // 見積もり計算ボタンをクリック
+                                    calculateEstimate();
+                                    
+                                    // 注文書作成ボタンを表示
+                                    document.getElementById('order-create-button').style.display = 'block';
+                                }, 300);
                             } else {
                                 alert(result.error || '注文データの取得に失敗しました');
                             }

@@ -16,6 +16,7 @@ from django.utils import timezone
 from project_name.models import Project
 from .forms import CustomUserCreationForm
 from django.contrib.auth import login
+from django.contrib.auth.models import Group
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -411,14 +412,17 @@ def _map_fukusha5(value):
     return fukusha5_map.get(value, '')
 
 def add_account_view(request):
+    # 閲覧のみグループが存在しない場合は作成
+    view_only_group, created = Group.objects.get_or_create(name="閲覧のみグループ")
+    
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # 自動ログインする場合はこの行を有効にする
-            # login(request, user)
-            messages.success(request, f'アカウント {user.username} が正常に作成されました！')
-            return redirect('login')
+            # 成功メッセージを設定
+            messages.success(request, f'アカウント {user.username} が登録されました')
+            # 新しいフォームを作成（フィールドをクリアするため）
+            form = CustomUserCreationForm()
     else:
         form = CustomUserCreationForm()
     return render(request, 'accounts/add_account.html', {'form': form})

@@ -115,7 +115,7 @@
             </form>
             
             <div class="login-link">
-                <p>すでにアカウントをお持ちの方は <a href="{% url 'login' %}">ログイン</a> してください</p>
+                <a href="{% url 'login' %}">戻る</a>
             </div>
         </div>
     </div>
@@ -126,9 +126,21 @@
     <script>
         // フォーム要素のスタイルを適用
         document.addEventListener('DOMContentLoaded', function() {
-            const inputs = document.querySelectorAll('input');
+            const inputs = document.querySelectorAll('input:not([type="checkbox"])');
             inputs.forEach(input => {
                 input.classList.add('form-control');
+            });
+            
+            // チェックボックスにフォームチェッククラスを追加
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.classList.add('form-check-input');
+            });
+            
+            // セレクトボックスにフォームセレクトクラスを追加
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                select.classList.add('form-select');
             });
         });
     </script>

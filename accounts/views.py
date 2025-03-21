@@ -14,6 +14,8 @@ from django.core.files.storage import FileSystemStorage
 import time
 from django.utils import timezone
 from project_name.models import Project
+from .forms import CustomUserCreationForm
+from django.contrib.auth import login
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -407,3 +409,16 @@ def _map_fukusha5(value):
         '両面2枚複写': 'fukusha_add_price-4'
     }
     return fukusha5_map.get(value, '')
+
+def add_account_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # 自動ログインする場合はこの行を有効にする
+            # login(request, user)
+            messages.success(request, f'アカウント {user.username} が正常に作成されました！')
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'accounts/add_account.html', {'form': form})

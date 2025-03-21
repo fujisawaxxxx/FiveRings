@@ -98,6 +98,9 @@
             {{ form.as_p }}
             <button type="submit" class="btn-info">ログイン</button>
         </form>
+        <div class="text-center mt-3">
+            <p>アカウントをお持ちでない方は <a href="{% url 'add_account' %}" style="color: #0dcaf0;">新規登録</a></p>
+        </div>
     </div>
 
     <!-- Bootstrap JS (オプション) -->

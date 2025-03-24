@@ -71,8 +71,8 @@ def create_order_view(request):
                 staff=request.user,
                 product_type=product_type,
                 invoice_detail=request.GET.get('invoice_detail', ''),
-                upload_file=upload_file,
-                upload_file_timestamped=upload_file_timestamped,  # タイムスタンプ付きファイル名を保存
+                upload_file=upload_file,  # オリジナルのファイル名を保存
+                upload_file_timestamped=upload_file_timestamped,  # タイムスタンプ付きファイル名は内部処理用に保存
                 quantity=int(request.GET.get('quantity', 0)),
                 content=request.GET.get('content', ''),
                 sanka_card_type=request.GET.get('sanka_card_type', ''),

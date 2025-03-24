@@ -122,6 +122,11 @@
                 quantityInput.addEventListener("input", function() {
                     console.log("Quantity changed");
                     hideOrderButton();
+                    // 計算済みの値と比較
+                    var currentQuantity = parseFloat(this.value) || 0;
+                    if (currentQuantity !== lastCalculatedQuantity) {
+                        document.getElementById("order-create-button").style.display = "none";
+                    }
                 });
             }
             
@@ -131,6 +136,11 @@
                 contentInput.addEventListener("input", function() {
                     console.log("Content changed");
                     hideOrderButton();
+                    // 計算済みの値と比較
+                    var currentContent = parseFloat(this.value) || 0;
+                    if (currentContent !== lastCalculatedContent) {
+                        document.getElementById("order-create-button").style.display = "none";
+                    }
                 });
             }
             
@@ -492,12 +502,20 @@
         }
 
         // 見積もり計算ボタンの動作
+        var lastCalculatedQuantity = 0;
+        var lastCalculatedContent = 0;
+        
         function calculateEstimate() {
             var quantity = parseFloat(document.getElementById("quantity").value) || 0;
             var selectedProduct = document.getElementById("document-type").value;
+            var content = parseFloat(document.getElementById("content").value) || 0;
             
             console.log("Selected Product:", selectedProduct);
             console.log("Quantity:", quantity);
+
+            // 計算時の値を保存
+            lastCalculatedQuantity = quantity;
+            lastCalculatedContent = content;
 
             // 汎用商品の場合
             if (selectedProduct === "generic") {
@@ -655,8 +673,34 @@
             }
         }
 
+        // 注文書作成前に値が変更されていないか確認する関数
+        function checkValuesBeforeOrder() {
+            var currentQuantity = parseFloat(document.getElementById("quantity").value) || 0;
+            var currentContent = parseFloat(document.getElementById("content").value) || 0;
+            
+            // 値が変更されていないか確認
+            if (currentQuantity !== lastCalculatedQuantity || currentContent !== lastCalculatedContent) {
+                alert("数量または本文の値が変更されています。再度見積もり計算を行ってください。");
+                // 注文書作成ボタンを非表示
+                document.getElementById("order-create-button").style.display = "none";
+                return false;
+            }
+            return true;
+        }
 
         function order_create() {
+            // 値が変更されていないか確認
+            if (!checkValuesBeforeOrder()) {
+                return; // 処理を中断
+            }
+            
+            // 見積もり金額が計算されているか確認
+            const estimateText = document.getElementById("estimate-result").innerText;
+            if (estimateText === "見積もり金額: - 円" || estimateText.includes("未入力") || estimateText.includes("選択してください")) {
+                alert("先に見積もり計算を行ってください。");
+                return; // 処理を中断
+            }
+            
             // ファイルがアップロードされているかチェック
             const uploadFileName = document.getElementById("selected-filename").innerText || "-";
             if (uploadFileName === "" || uploadFileName === "-") {

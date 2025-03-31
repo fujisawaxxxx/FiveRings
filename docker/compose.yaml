@@ -1,0 +1,21 @@
+
+name: FiveRings_DB
+version: '3.9'
+services:
+    local_db:
+        image: postgres
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        environment:
+            POSTGRES_DB: FiveRings_DB
+            POSTGRES_USER: a_fujisawa
+            POSTGRES_PASSWORD: 51s93c7w
+        ports:
+            - "5432:5432"
+        networks:
+            - default
+volumes:
+    postgres_data:
+networks:
+    default:
+        name: ネットワーク名 例:spam_network

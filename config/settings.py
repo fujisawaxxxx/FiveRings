@@ -10,6 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
+
+# .envファイルを読み込む
+load_dotenv()
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -144,8 +150,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # GmailのSMTPサーバー
 EMAIL_PORT = 587  # TLSポート
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'gcp01@ag-media.co.jp'
-EMAIL_HOST_PASSWORD = 'nueykebjxcwerbht'  # アプリパスワードを設定する必要があります
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Media files
 MEDIA_URL = '/media/'

@@ -12,11 +12,11 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from dotenv import load_dotenv
+from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
 
 # .envファイルを読み込む
 load_dotenv()
-
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,12 +26,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mz3xy)wpojb+m9%5*!h68kdd#d=)gw30yj$6*4e5gg(=@55i=8'
+SECRET_KEY = os.environ.get('SECRET_KEY')
+if not SECRET_KEY:
+    raise ImproperlyConfigured("SECRET_KEYが.envファイルに設定されていません")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG_VALUE = os.environ.get('DEBUG')
+if DEBUG_VALUE is None:
+    raise ImproperlyConfigured("DEBUGが.envファイルに設定されていません")
+    
+DEBUG = DEBUG_VALUE.lower() == 'true'
 
-ALLOWED_HOSTS = ['*', '192.168.1.196', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS_VALUE = os.environ.get('ALLOWED_HOSTS')
+if not ALLOWED_HOSTS_VALUE:
+    raise ImproperlyConfigured("ALLOWED_HOSTSが.envファイルに設定されていません")
+ALLOWED_HOSTS = ALLOWED_HOSTS_VALUE.split(',')
 
 
 # Application definition
@@ -83,19 +92,31 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
+# データベース設定の取得と検証
+DB_NAME = os.environ.get('DB_NAME')
+DB_USER = os.environ.get('DB_USER')
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+DB_HOST = os.environ.get('DB_HOST')
+DB_PORT = os.environ.get('DB_PORT')
 
+# 必須項目の検証
+if not all([DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT]):
+    missing = []
+    if not DB_NAME: missing.append('DB_NAME')
+    if not DB_USER: missing.append('DB_USER')
+    if not DB_PASSWORD: missing.append('DB_PASSWORD')
+    if not DB_HOST: missing.append('DB_HOST')
+    if not DB_PORT: missing.append('DB_PORT')
+    raise ImproperlyConfigured(f"以下のデータベース設定が.envファイルにありません: {', '.join(missing)}")
+
+DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "FiveRings_DB",
-        "USER": "a_fujisawa",
-        "PASSWORD": "51s93c7w",
-        "HOST": "localhost",
-        "PORT": "5432",
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": DB_PORT,
     }
 }
 
@@ -145,16 +166,30 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/accounts/main/'  # ログイン後のリダイレクト先
 
+# メール設定の取得と検証
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# メール設定の必須項目検証
+if not all([EMAIL_HOST_USER, EMAIL_HOST_PASSWORD]):
+    missing = []
+    if not EMAIL_HOST_USER: missing.append('EMAIL_HOST_USER')
+    if not EMAIL_HOST_PASSWORD: missing.append('EMAIL_HOST_PASSWORD')
+    raise ImproperlyConfigured(f"以下のメール設定が.envファイルにありません: {', '.join(missing)}")
+
 # メール設定
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # GmailのSMTPサーバー
 EMAIL_PORT = 587  # TLSポート
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-CSRF_TRUSTED_ORIGINS = ['http://192.168.1.196:8000']
+# CSRF設定
+CSRF_TRUSTED_ORIGINS_VALUE = os.environ.get('CSRF_TRUSTED_ORIGINS')
+if CSRF_TRUSTED_ORIGINS_VALUE:
+    CSRF_TRUSTED_ORIGINS = CSRF_TRUSTED_ORIGINS_VALUE.split(',')
+else:
+    CSRF_TRUSTED_ORIGINS = ['http://192.168.1.196:8000']

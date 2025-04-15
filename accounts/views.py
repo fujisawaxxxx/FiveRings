@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from items.models import ParticipationCard  # 追加
 from order_rireki.models import OrderHistory  # 追加
 from django.contrib import messages  # 追加
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.conf import settings
 import os
@@ -17,6 +17,7 @@ from project_name.models import Project
 from .forms import CustomUserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
+from anymail.message import AnymailMessage
 
 @login_required  # ログインが必要なビューとして設定
 def main_view(request):
@@ -159,7 +160,7 @@ def create_order_view(request):
             admin_mail_body += f"\n管理画面URL: http://127.0.0.1:8000//admin/order_rireki/orderhistory/{order.id}/"
 
             # 管理者へのメール送信
-            email = EmailMessage(
+            email = AnymailMessage(
                 subject=f'ファイブリングス新規注文通知 - 注文番号: {order.order_number}',
                 body=admin_mail_body,
                 from_email=settings.EMAIL_HOST_USER,
@@ -182,7 +183,7 @@ def create_order_view(request):
                     user_mail_body += f"{key}: {value}\n"
 
             # ユーザーへのメール送信
-            user_email = EmailMessage(
+            user_email = AnymailMessage(
                 subject=f'【注文受付完了 {order.order_number}】ご注文ありがとうございます',
                 body=user_mail_body,
                 from_email=settings.EMAIL_HOST_USER,

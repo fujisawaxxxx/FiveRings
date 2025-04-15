@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'items',
     'order_rireki',
     'project_name',
+    'anymail',
 ]
 
 MIDDLEWARE = [
@@ -178,10 +179,11 @@ if not all([EMAIL_HOST_USER, EMAIL_HOST_PASSWORD]):
     raise ImproperlyConfigured(f"以下のメール設定が.envファイルにありません: {', '.join(missing)}")
 
 # メール設定
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # GmailのSMTPサーバー
-EMAIL_PORT = 587  # TLSポート
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+ANYMAIL = {
+    "SENDGRID_API_KEY": os.environ.get('SENDGRID_API_KEY'),
+    "SENDGRID_SENDER_DOMAIN": os.environ.get('SENDGRID_SENDER_DOMAIN'),
+}
 
 # Media files
 MEDIA_URL = '/media/'
